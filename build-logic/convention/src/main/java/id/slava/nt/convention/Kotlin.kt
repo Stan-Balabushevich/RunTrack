@@ -44,5 +44,4 @@ private fun Project.configureKotlin() {
             freeCompilerArgs.add("-opt-in=kotlin.RequiresOptIn")
         }
     }
-
 }
