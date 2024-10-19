@@ -1,4 +1,6 @@
 import com.android.build.api.dsl.ApplicationExtension
+import id.slava.nt.convention.ExtensionType
+import id.slava.nt.convention.configureBuildTypes
 import id.slava.nt.convention.configureKotlinAndroid
 import id.slava.nt.convention.libs
 
@@ -6,7 +8,7 @@ import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.kotlin.dsl.configure
 
-class AndroidApplicationConventionPlugin: Plugin<Project> {
+class AndroidApplicationConventionPlugin : Plugin<Project> {
 
     override fun apply(target: Project) {
         target.run {
@@ -25,6 +27,11 @@ class AndroidApplicationConventionPlugin: Plugin<Project> {
                 }
 
                 configureKotlinAndroid(this)
+                configureBuildTypes(
+                    commonExtension = this,
+                    extensionType = ExtensionType.APPLICATION,
+                    providers = target.providers
+                )
             }
         }
     }
