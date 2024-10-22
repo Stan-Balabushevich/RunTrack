@@ -3,7 +3,6 @@ import id.slava.nt.convention.ExtensionType
 import id.slava.nt.convention.configureBuildTypes
 import id.slava.nt.convention.configureKotlinAndroid
 import id.slava.nt.convention.libs
-
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.kotlin.dsl.configure
@@ -15,7 +14,6 @@ class AndroidApplicationConventionPlugin : Plugin<Project> {
             pluginManager.run {
                 apply("com.android.application")
                 apply("org.jetbrains.kotlin.android")
-                apply("org.jetbrains.kotlin.plugin.compose")
             }
             extensions.configure<ApplicationExtension> {
                 defaultConfig {

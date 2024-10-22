@@ -18,5 +18,13 @@ gradlePlugin {
             id = "plrun.android.application"
             implementationClass = "AndroidApplicationConventionPlugin"
         }
+        register("androidApplicationCompose") {
+            id = "plrun.android.application.compose"
+            implementationClass = "AndroidApplicationComposeConventionPlugin"
+        }
+        register("androidLibrary") {
+            id = "plrun.android.library"
+            implementationClass = "AndroidLibraryConventionPlugin"
+        }
     }
 }

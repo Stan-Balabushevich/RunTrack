@@ -1,6 +1,6 @@
 plugins {
 //    alias(libs.plugins.android.application)
-    alias(libs.plugins.plrun.android.application)
+    alias(libs.plugins.plrun.android.application.compose)
 //    alias(libs.plugins.kotlin.android)
 //    alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.mapsplatform.secrets.plugin)
@@ -42,15 +42,15 @@ android {
 //    kotlinOptions {
 //        jvmTarget = "1.8"
 //    }
-    buildFeatures {
-        compose = true
-    }
+//    buildFeatures {
+//        compose = true
+//    }
 }
 
 dependencies {
 
-    implementation(platform(libs.androidx.compose.bom))
-    androidTestImplementation(platform(libs.androidx.compose.bom))
+//    implementation(platform(libs.androidx.compose.bom))
+//    androidTestImplementation(platform(libs.androidx.compose.bom))
 
     // Coil
     implementation(libs.coil.compose)
