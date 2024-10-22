@@ -130,4 +130,5 @@ mapsplatform-secrets-plugin = { id = "com.google.android.libraries.mapsplatform.
 plrun-android-application = { id = "plrun.android.application", version = "unspecified" }
 plrun-android-application-compose = { id = "plrun.android.application.compose", version = "unspecified" }
 plrun-android-library = { id = "plrun.android.library", version = "unspecified" }
+plrun-android-library-compose = { id = "plrun.android.library.compose", version = "unspecified" }
 
