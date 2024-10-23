@@ -133,6 +133,7 @@ plrun-android-library = { id = "plrun.android.library", version = "unspecified" 
 plrun-android-library-compose = { id = "plrun.android.library.compose", version = "unspecified" }
 plrun-android-feature-ui = { id = "plrun.android.feature.ui", version = "unspecified" }
 plrun-android-room = { id = "plrun.android.room", version = "unspecified" }
+plrun-jvm-library = { id = "plrun.jvm.library", version = "unspecified" }
 
 
 [bundles]

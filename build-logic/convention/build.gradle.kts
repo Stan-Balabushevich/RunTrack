@@ -38,6 +38,10 @@ gradlePlugin {
             id = "plrun.android.room"
             implementationClass = "AndroidRoomConventionPlugin"
         }
+        register("jvmLibrary") {
+            id = "plrun.jvm.library"
+            implementationClass = "JvmLibraryConventionPlugin"
+        }
 
     }
 }

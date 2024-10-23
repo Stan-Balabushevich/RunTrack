@@ -1,56 +1,21 @@
 plugins {
-//    alias(libs.plugins.android.application)
     alias(libs.plugins.plrun.android.application.compose)
-//    alias(libs.plugins.kotlin.android)
-//    alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.mapsplatform.secrets.plugin)
-
-
 }
 
 android {
     namespace = "id.slava.nt.plrun"
-//    compileSdk = 34
 
     defaultConfig {
-//        applicationId = "id.slava.nt.plrun"
-//        minSdk = 24
-//        targetSdk = 34
-//        versionCode = 1
-//        versionName = "1.0"
-
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
         vectorDrawables {
             useSupportLibrary = true
         }
     }
-
-//    buildTypes {
-//        release {
-//            isMinifyEnabled = false
-//            proguardFiles(
-//                getDefaultProguardFile("proguard-android-optimize.txt"),
-//                "proguard-rules.pro"
-//            )
-//        }
-//    }
-//    compileOptions {
-//        sourceCompatibility = JavaVersion.VERSION_1_8
-//        targetCompatibility = JavaVersion.VERSION_1_8
-//    }
-//    kotlinOptions {
-//        jvmTarget = "1.8"
-//    }
-//    buildFeatures {
-//        compose = true
-//    }
 }
 
 dependencies {
-
-//    implementation(platform(libs.androidx.compose.bom))
-//    androidTestImplementation(platform(libs.androidx.compose.bom))
 
     // Coil
     implementation(libs.coil.compose)
