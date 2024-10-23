@@ -134,6 +134,7 @@ plrun-android-library-compose = { id = "plrun.android.library.compose", version 
 plrun-android-feature-ui = { id = "plrun.android.feature.ui", version = "unspecified" }
 plrun-android-room = { id = "plrun.android.room", version = "unspecified" }
 plrun-jvm-library = { id = "plrun.jvm.library", version = "unspecified" }
+plrun-jvm-ktor = { id = "plrun.jvm.ktor", version = "unspecified" }
 
 
 [bundles]
@@ -152,4 +153,11 @@ compose-debug = [
 ]
 koin = ["koin-core", "koin-android", "koin-android-workmanager"]
 koin-compose = ["koin-core", "koin-android", "koin-android-workmanager", "koin-androidx-compose"]
-
+ktor = [
+    "ktor-client-auth",
+    "ktor-client-cio",
+    "ktor-client-content-negotiation",
+    "ktor-client-core",
+    "ktor-client-logging",
+    "ktor-serialization-kotlinx-json"
+]

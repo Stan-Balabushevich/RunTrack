@@ -1,5 +1,6 @@
 plugins {
     alias(libs.plugins.plrun.android.application.compose)
+    alias(libs.plugins.plrun.jvm.ktor)
     alias(libs.plugins.mapsplatform.secrets.plugin)
 }
 
@@ -56,6 +57,7 @@ dependencies {
     // Timber
     implementation(libs.timber)
 
+    // all app modules
     implementation(projects.core.presentation.designsystem)
     implementation(projects.core.presentation.ui)
     implementation(projects.core.domain)
