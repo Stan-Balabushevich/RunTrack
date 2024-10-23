@@ -1,5 +1,7 @@
 plugins {
     alias(libs.plugins.plrun.android.library)
+    alias(libs.plugins.plrun.android.room)
+
 }
 
 android {
