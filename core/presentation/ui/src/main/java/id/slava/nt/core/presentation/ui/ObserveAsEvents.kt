@@ -19,6 +19,7 @@ fun <T> ObserveAsEvents(
     val lifecycleOwner = LocalLifecycleOwner.current
     LaunchedEffect(flow, lifecycleOwner.lifecycle, key1, key2) {
         lifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+            // Main.immediate is used to ensure not loose events
             withContext(Dispatchers.Main.immediate) {
                 flow.collect(onEvent)
             }
