@@ -1,7 +1,6 @@
 package id.slava.nt.core.presentation.ui
 
 
-import com.plcoding.core.presentation.ui.UiText
 import id.slava.nt.core.domain.util.DataError
 
 fun DataError.asUiText(): UiText {
