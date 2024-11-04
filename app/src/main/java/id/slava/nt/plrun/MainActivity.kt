@@ -26,11 +26,11 @@ class MainActivity : ComponentActivity() {
                         name = "Android",
                         modifier = Modifier.padding(innerPadding)
                     )
-                    RegisterScreenRoot(
-                        onSuccessfulRegistration = {},
-                        onSignInClick = {}
-
-                    )
+//                    RegisterScreenRoot(
+//                        onSuccessfulRegistration = {},
+//                        onSignInClick = {}
+//
+//                    )
                 }
             }
         }
