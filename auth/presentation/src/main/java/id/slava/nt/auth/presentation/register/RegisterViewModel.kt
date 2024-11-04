@@ -23,7 +23,7 @@ import id.slava.nt.core.domain.util.Result
 
 class RegisterViewModel(
     private val userDataValidator: UserDataValidator,
-//    private val repository: AuthRepository
+    private val repository: AuthRepository
 ): ViewModel() {
 
     var state by mutableStateOf(RegisterState())
@@ -94,29 +94,29 @@ class RegisterViewModel(
     }
 
     private fun register() {
-//        viewModelScope.launch {
-//            state = state.copy(isRegistering = true)
-//            val result = repository.register(
-//                email = state.email.text.toString().trim(),
-//                password = state.password.text.toString()
-//            )
-//            state = state.copy(isRegistering = false)
-//
-//            when(result) {
-//                is Result.Error -> {
-//                    if(result.error == DataError.Network.CONFLICT) {
-//                        eventChannel.send(
-//                            RegisterEvent.Error(
-//                            UiText.StringResource(R.string.error_email_exists)
-//                        ))
-//                    } else {
-//                        eventChannel.send(RegisterEvent.Error(result.error.asUiText()))
-//                    }
-//                }
-//                is Result.Success -> {
-//                    eventChannel.send(RegisterEvent.RegistrationSuccess)
-//                }
-//            }
-//        }
+        viewModelScope.launch {
+            state = state.copy(isRegistering = true)
+            val result = repository.register(
+                email = state.email.text.toString().trim(),
+                password = state.password.text.toString()
+            )
+            state = state.copy(isRegistering = false)
+
+            when(result) {
+                is Result.Error -> {
+                    if(result.error == DataError.Network.CONFLICT) {
+                        eventChannel.send(
+                            RegisterEvent.Error(
+                            UiText.StringResource(R.string.error_email_exists)
+                        ))
+                    } else {
+                        eventChannel.send(RegisterEvent.Error(result.error.asUiText()))
+                    }
+                }
+                is Result.Success -> {
+                    eventChannel.send(RegisterEvent.RegistrationSuccess)
+                }
+            }
+        }
     }
 }

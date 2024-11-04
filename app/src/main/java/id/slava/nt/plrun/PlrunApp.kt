@@ -6,6 +6,7 @@ import com.google.android.play.core.splitcompat.SplitCompat
 
 import id.slava.nt.auth.data.di.authDataModule
 import id.slava.nt.auth.presentation.di.authViewModelModule
+import id.slava.nt.core.data.di.coreDataModule
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.SupervisorJob
 import org.koin.android.ext.koin.androidContext
@@ -32,7 +33,7 @@ class PlrunApp: Application() {
                 authDataModule,
                 authViewModelModule,
 //                appModule,
-//                coreDataModule,
+                coreDataModule,
 //                runPresentationModule,
 //                locationModule,
 //                databaseModule,

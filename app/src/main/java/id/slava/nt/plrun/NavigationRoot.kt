@@ -1,5 +1,6 @@
 package id.slava.nt.plrun
 
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavGraphBuilder
@@ -61,6 +62,8 @@ private fun NavGraphBuilder.authGraph(navController: NavHostController) {
             )
         }
         composable("login") {
+
+            Text(text = "Login")
 //            LoginScreenRoot(
 //                onLoginSuccess = {
 //                    navController.navigate("run") {

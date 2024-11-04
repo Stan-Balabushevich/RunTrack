@@ -1,6 +1,8 @@
 package id.slava.nt.auth.data.di
 
+import id.slava.nt.auth.data.AuthRepositoryImpl
 import id.slava.nt.auth.data.EmailPatternValidator
+import id.slava.nt.auth.domain.AuthRepository
 import id.slava.nt.auth.domain.PatternValidator
 import id.slava.nt.auth.domain.UserDataValidator
 
@@ -14,5 +16,9 @@ val authDataModule = module {
         EmailPatternValidator
     }
     singleOf(::UserDataValidator)
-//    singleOf(::AuthRepositoryImpl).bind<AuthRepository>()
+    singleOf(::AuthRepositoryImpl).bind<AuthRepository>()
+
+//    single<AuthRepository> {
+//        AuthRepositoryImpl(get())
+//    }
 }
