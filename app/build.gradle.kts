@@ -39,7 +39,11 @@ dependencies {
     // Crypto
     implementation(libs.androidx.security.crypto.ktx)
 
-    api(libs.playCore)
+    //Koin
+    implementation(libs.bundles.koin)
+
+    api(libs.playCoreUpdate)
+    api(libs.playCoreDelivery)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
