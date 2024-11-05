@@ -1,11 +1,7 @@
-@file:OptIn(ExperimentalFoundationApi::class)
-
 package id.slava.nt.auth.presentation.register
 
 import android.widget.Toast
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -15,8 +11,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.text.BasicText
-import androidx.compose.foundation.text.ClickableText
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -24,15 +18,11 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.SpanStyle
-import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -86,14 +76,16 @@ fun RegisterScreenRoot(
     RegisterScreen(
         state = viewModel.state,
 //        onAction = {action -> viewModel.onAction(action)}
-        onAction = viewModel::onAction
+        onAction = viewModel::onAction,
+        onSignInClick = onSignInClick
     )
 }
 
 @Composable
 private fun RegisterScreen(
     state: RegisterState,
-    onAction: (RegisterAction) -> Unit
+    onAction: (RegisterAction) -> Unit,
+    onSignInClick: () -> Unit,
 ) {
     GradientBackground {
         Column(
@@ -108,61 +100,26 @@ private fun RegisterScreen(
                 text = stringResource(id = R.string.create_account),
                 style = MaterialTheme.typography.headlineMedium
             )
-            val annotatedString = buildAnnotatedString {
-                withStyle(
-                    style = SpanStyle(
-                        fontFamily = Poppins,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                    )
-                ) {
-                    append(stringResource(id = R.string.already_have_an_account) + " ")
-                    pushStringAnnotation(
-                        tag = "clickable_text",
-                        annotation = stringResource(id = R.string.login)
-                    )
-                    withStyle(
-                        style = SpanStyle(
-                            fontWeight = FontWeight.SemiBold,
-                            color = MaterialTheme.colorScheme.primary,
-                            fontFamily = Poppins
-                        )
-                    ) {
-                        append(stringResource(id = R.string.login))
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Text(
+                    text = stringResource(id = R.string.already_have_an_account) + " ",
+                    fontFamily = Poppins,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+                Text(
+                    text = stringResource(id = R.string.login),
+                    fontWeight = FontWeight.SemiBold,
+                    color = MaterialTheme.colorScheme.primary,
+                    fontFamily = Poppins,
+                    modifier = Modifier.clickable {
+                        onSignInClick()
                     }
-                }
+                )
+
             }
-
-//            Text(
-//                text = annotatedString,
-//                modifier = Modifier
-//                    .padding(top = 16.dp)
-//                    .pointerInput(Unit) {
-//                        // Detect clicks
-//                        detectTapGestures { offset ->
-//                            // Handle click at this offset
-//                            annotatedString.getStringAnnotations(
-//                                tag = "clickable_text",
-//                                start = offset.x.toInt(),
-//                                end = offset.x.toInt()
-//                            ).firstOrNull()?.let {
-//                                onAction(RegisterAction.OnLoginClick) // Trigger the action on click
-//                            }
-//                        }
-//                    }
-//            )
-
-            ClickableText(
-                text = annotatedString,
-                onClick = { offset: Int ->
-                    annotatedString.getStringAnnotations(
-                        tag = "clickable_text",
-                        start = offset,
-                        end = offset
-                    ).firstOrNull()?.let {
-                        onAction(RegisterAction.OnLoginClick)
-                    }
-                }
-            )
             Spacer(modifier = Modifier.height(48.dp))
             PlrunTextField(
                 state = state.email,
@@ -269,7 +226,8 @@ private fun RegisterScreenPreview() {
                     hasNumber = true,
                 )
             ),
-            onAction = {}
+            onAction = {},
+            onSignInClick = {}
         )
     }
 }
