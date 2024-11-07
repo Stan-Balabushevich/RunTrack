@@ -2,6 +2,9 @@ package id.slava.nt.core.data.networking
 
 
 import id.slava.nt.core.data.BuildConfig
+import id.slava.nt.core.domain.AuthInfo
+import id.slava.nt.core.domain.SessionStorage
+import id.slava.nt.core.domain.util.Result
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.cio.CIO
 import io.ktor.client.plugins.auth.Auth
@@ -20,7 +23,7 @@ import kotlinx.serialization.json.Json
 import timber.log.Timber
 
 class HttpClientFactory(
-//    private val sessionStorage: SessionStorage
+    private val sessionStorage: SessionStorage
 ) {
 
     fun build(): HttpClient {
@@ -44,46 +47,46 @@ class HttpClientFactory(
                 contentType(ContentType.Application.Json)
                 header("x-api-key", BuildConfig.API_KEY)
             }
-//            install(Auth) {
-//                bearer {
-//                    loadTokens {
-//                        val info = sessionStorage.get()
-//                        BearerTokens(
-//                            accessToken = info?.accessToken ?: "",
-//                            refreshToken = info?.refreshToken ?: ""
-//                        )
-//                    }
-//                    refreshTokens {
-//                        val info = sessionStorage.get()
-//                        val response = client.post<AccessTokenRequest, AccessTokenResponse>(
-//                            route = "/accessToken",
-//                            body = AccessTokenRequest(
-//                                refreshToken = info?.refreshToken ?: "",
-//                                userId = info?.userId ?: ""
-//                            )
-//                        )
-//
-//                        if(response is Result.Success) {
-//                            val newAuthInfo = AuthInfo(
-//                                accessToken = response.data.accessToken,
-//                                refreshToken = info?.refreshToken ?: "",
-//                                userId = info?.userId ?: ""
-//                            )
-//                            sessionStorage.set(newAuthInfo)
-//
-//                            BearerTokens(
-//                                accessToken = newAuthInfo.accessToken,
-//                                refreshToken = newAuthInfo.refreshToken
-//                            )
-//                        } else {
-//                            BearerTokens(
-//                                accessToken = "",
-//                                refreshToken = ""
-//                            )
-//                        }
-//                    }
-//                }
-//            }
+            install(Auth) {
+                bearer {
+                    loadTokens {
+                        val info = sessionStorage.get()
+                        BearerTokens(
+                            accessToken = info?.accessToken ?: "",
+                            refreshToken = info?.refreshToken ?: ""
+                        )
+                    }
+                    refreshTokens {
+                        val info = sessionStorage.get()
+                        val response = client.post<AccessTokenRequest, AccessTokenResponse>(
+                            route = "/accessToken",
+                            body = AccessTokenRequest(
+                                refreshToken = info?.refreshToken ?: "",
+                                userId = info?.userId ?: ""
+                            )
+                        )
+
+                        if(response is Result.Success) {
+                            val newAuthInfo = AuthInfo(
+                                accessToken = response.data.accessToken,
+                                refreshToken = info?.refreshToken ?: "",
+                                userId = info?.userId ?: ""
+                            )
+                            sessionStorage.set(newAuthInfo)
+
+                            BearerTokens(
+                                accessToken = newAuthInfo.accessToken,
+                                refreshToken = newAuthInfo.refreshToken
+                            )
+                        } else {
+                            BearerTokens(
+                                accessToken = "",
+                                refreshToken = ""
+                            )
+                        }
+                    }
+                }
+            }
         }
     }
 }

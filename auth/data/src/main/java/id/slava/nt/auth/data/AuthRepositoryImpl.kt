@@ -3,13 +3,14 @@ package id.slava.nt.auth.data
 
 import id.slava.nt.auth.domain.AuthRepository
 import id.slava.nt.core.data.networking.post
+import id.slava.nt.core.domain.SessionStorage
 import id.slava.nt.core.domain.util.DataError
 import id.slava.nt.core.domain.util.EmptyResult
 import io.ktor.client.HttpClient
 
 class AuthRepositoryImpl(
     private val httpClient: HttpClient,
-//    private val sessionStorage: SessionStorage
+    private val sessionStorage: SessionStorage
 ): AuthRepository {
 
 //    override suspend fun login(email: String, password: String): EmptyResult<DataError.Network> {
