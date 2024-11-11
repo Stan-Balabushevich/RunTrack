@@ -10,6 +10,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navDeepLink
 import androidx.navigation.navigation
 import id.slava.nt.auth.presentation.intro.IntroScreenRoot
+import id.slava.nt.auth.presentation.login.LoginScreenRoot
 import id.slava.nt.auth.presentation.register.RegisterScreenRoot
 
 
@@ -26,7 +27,9 @@ fun NavigationRoot(
 
     ) {
         authGraph(navController)
-//        runGraph(navController, onAnalyticsClick)
+        runGraph(navController,
+//            onAnalyticsClick
+        )
     }
 }
 
@@ -49,13 +52,13 @@ private fun NavGraphBuilder.authGraph(navController: NavHostController) {
             RegisterScreenRoot(
                 onSignInClick = {
                     navController.navigate("login")
-//                    {
-//                        popUpTo("register") {
-//                            inclusive = true
-//                            saveState = true
-//                        }
-//                        restoreState = true
-//                    }
+                    {
+                        popUpTo("register") {
+                            inclusive = true
+                            saveState = true
+                        }
+                        restoreState = true
+                    }
                 },
                 onSuccessfulRegistration = {
                     navController.navigate("login")
@@ -63,39 +66,40 @@ private fun NavGraphBuilder.authGraph(navController: NavHostController) {
             )
         }
         composable("login") {
-
-            Text(text = "Login")
-//            LoginScreenRoot(
-//                onLoginSuccess = {
-//                    navController.navigate("run") {
-//                        popUpTo("auth") {
-//                            inclusive = true
-//                        }
-//                    }
-//                },
-//                onSignUpClick = {
-//                    navController.navigate("register") {
-//                        popUpTo("login") {
-//                            inclusive = true
-//                            saveState = true
-//                        }
-//                        restoreState = true
-//                    }
-//                }
-//            )
+            LoginScreenRoot(
+                onLoginSuccess = {
+                    navController.navigate("run") {
+                        popUpTo("auth") {
+                            inclusive = true
+                        }
+                    }
+                },
+                onSignUpClick = {
+                    navController.navigate("register")
+                    {
+                        popUpTo("login") {
+                            inclusive = true
+                            saveState = true
+                        }
+                        restoreState = true
+                    }
+                }
+            )
         }
     }
 }
 
-//private fun NavGraphBuilder.runGraph(
-//    navController: NavHostController,
+private fun NavGraphBuilder.runGraph(
+    navController: NavHostController,
 //    onAnalyticsClick: () -> Unit
-//) {
-//    navigation(
-//        startDestination = "run_overview",
-//        route = "run"
-//    ) {
-//        composable("run_overview") {
+) {
+    navigation(
+        startDestination = "run_overview",
+        route = "run"
+    ) {
+        composable("run_overview") {
+
+            Text(text = "run_overview")
 //            RunOverviewScreenRoot(
 //                onStartRunClick = {
 //                    navController.navigate("active_run")
@@ -109,7 +113,7 @@ private fun NavGraphBuilder.authGraph(navController: NavHostController) {
 //                    }
 //                }
 //            )
-//        }
+        }
 //        composable(
 //            route = "active_run",
 //            deepLinks = listOf(
@@ -142,5 +146,5 @@ private fun NavGraphBuilder.authGraph(navController: NavHostController) {
 //                }
 //            )
 //        }
-//    }
-//}
+    }
+}
