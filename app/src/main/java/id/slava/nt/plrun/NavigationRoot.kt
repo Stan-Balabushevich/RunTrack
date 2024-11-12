@@ -12,6 +12,7 @@ import androidx.navigation.navigation
 import id.slava.nt.auth.presentation.intro.IntroScreenRoot
 import id.slava.nt.auth.presentation.login.LoginScreenRoot
 import id.slava.nt.auth.presentation.register.RegisterScreenRoot
+import id.slava.nt.run.presentation.run_overview.RunOverviewScreenRoot
 
 
 @Composable
@@ -99,20 +100,21 @@ private fun NavGraphBuilder.runGraph(
     ) {
         composable("run_overview") {
 
-            Text(text = "run_overview")
-//            RunOverviewScreenRoot(
-//                onStartRunClick = {
-//                    navController.navigate("active_run")
-//                },
+
+            RunOverviewScreenRoot(
+                onStartRunClick = {
+                    navController.navigate("active_run")
+                },
 //                onAnalyticsClick = onAnalyticsClick,
-//                onLogoutClick = {
-//                    navController.navigate("auth") {
-//                        popUpTo("run") {
-//                            inclusive = true
-//                        }
-//                    }
-//                }
-//            )
+                onAnalyticsClick = {},
+                onLogoutClick = {
+                    navController.navigate("auth") {
+                        popUpTo("run") {
+                            inclusive = true
+                        }
+                    }
+                }
+            )
         }
 //        composable(
 //            route = "active_run",
