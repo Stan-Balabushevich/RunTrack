@@ -17,13 +17,13 @@ import id.slava.nt.auth.presentation.register.RegisterScreenRoot
 @Composable
 fun NavigationRoot(
     navController: NavHostController,
-//    isLoggedIn: Boolean,
+    isLoggedIn: Boolean,
 //    onAnalyticsClick: () -> Unit
 ) {
     NavHost(
         navController = navController,
-//        startDestination = if (isLoggedIn) "run" else "auth"
-        startDestination = "auth"
+        startDestination = if (isLoggedIn) "run" else "auth"
+//        startDestination = "auth"
 
     ) {
         authGraph(navController)
