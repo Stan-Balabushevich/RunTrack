@@ -12,6 +12,7 @@ import androidx.navigation.navigation
 import id.slava.nt.auth.presentation.intro.IntroScreenRoot
 import id.slava.nt.auth.presentation.login.LoginScreenRoot
 import id.slava.nt.auth.presentation.register.RegisterScreenRoot
+import id.slava.nt.run.presentation.active_run.ActiveRunScreenRoot
 import id.slava.nt.run.presentation.run_overview.RunOverviewScreenRoot
 
 
@@ -116,23 +117,23 @@ private fun NavGraphBuilder.runGraph(
                 }
             )
         }
-//        composable(
-//            route = "active_run",
-//            deepLinks = listOf(
-//                navDeepLink {
-//                    uriPattern = "runique://active_run"
-//                }
-//            )
-//        ) {
-//            val context = LocalContext.current
-//            ActiveRunScreenRoot(
-//                onBack = {
-//                    navController.navigateUp()
-//                },
-//                onFinish = {
-//                    navController.navigateUp()
-//                },
-//                onServiceToggle = { shouldServiceRun ->
+        composable(
+            route = "active_run",
+            deepLinks = listOf(
+                navDeepLink {
+                    uriPattern = "runique://active_run"
+                }
+            )
+        ) {
+            val context = LocalContext.current
+            ActiveRunScreenRoot(
+                onBack = {
+                    navController.navigateUp()
+                },
+                onFinish = {
+                    navController.navigateUp()
+                },
+                onServiceToggle = { shouldServiceRun ->
 //                    if (shouldServiceRun) {
 //                        context.startService(
 //                            ActiveRunService.createStartIntent(
@@ -145,8 +146,8 @@ private fun NavGraphBuilder.runGraph(
 //                            ActiveRunService.createStopIntent(context = context)
 //                        )
 //                    }
-//                }
-//            )
-//        }
+                }
+            )
+        }
     }
 }

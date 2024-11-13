@@ -29,16 +29,17 @@ import id.slava.nt.core.presentation.designsystem.components.PlrunScaffold
 import id.slava.nt.core.presentation.designsystem.components.PlrunToolbar
 import id.slava.nt.core.presentation.designsystem.components.util.DropDownItem
 import id.slava.nt.run.presentation.R
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun RunOverviewScreenRoot(
     onStartRunClick: () -> Unit,
     onLogoutClick: () -> Unit,
     onAnalyticsClick: () -> Unit,
-//    viewModel: RunOverviewViewModel = koinViewModel(),
+    viewModel: RunOverviewViewModel = koinViewModel(),
 ) {
     RunOverviewScreen(
-//        state = viewModel.state,
+        state = viewModel.state,
         onAction = { action ->
             when(action) {
                 RunOverviewAction.OnAnalyticsClick -> onAnalyticsClick()
@@ -46,14 +47,14 @@ fun RunOverviewScreenRoot(
                 RunOverviewAction.OnLogoutClick -> onLogoutClick()
                 else -> Unit
             }
-//            viewModel.onAction(action)
+            viewModel.onAction(action)
         }
     )
 }
 
 @Composable
 private fun RunOverviewScreen(
-//    state: RunOverviewState,
+    state: RunOverviewState,
     onAction: (RunOverviewAction) -> Unit
 ) {
     val topAppBarState = rememberTopAppBarState()
@@ -131,7 +132,7 @@ private fun RunOverviewScreen(
 private fun RunOverviewScreenPreview() {
     PlrunTheme  {
         RunOverviewScreen(
-//            state = RunOverviewState(),
+            state = RunOverviewState(),
             onAction = {}
         )
     }

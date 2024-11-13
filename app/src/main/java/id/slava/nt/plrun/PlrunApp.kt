@@ -8,6 +8,7 @@ import id.slava.nt.auth.data.di.authDataModule
 import id.slava.nt.auth.presentation.di.authViewModelModule
 import id.slava.nt.core.data.di.coreDataModule
 import id.slava.nt.plrun.di.appModule
+import id.slava.nt.run.presentation.di.runPresentationModule
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.SupervisorJob
 import org.koin.android.ext.koin.androidContext
@@ -35,7 +36,7 @@ class PlrunApp: Application() {
                 authViewModelModule,
                 appModule,
                 coreDataModule,
-//                runPresentationModule,
+                runPresentationModule,
 //                locationModule,
 //                databaseModule,
 //                networkModule,
