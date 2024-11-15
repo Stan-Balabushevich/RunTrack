@@ -1,6 +1,5 @@
 package id.slava.nt.plrun
 
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavGraphBuilder
@@ -12,6 +11,7 @@ import androidx.navigation.navigation
 import id.slava.nt.auth.presentation.intro.IntroScreenRoot
 import id.slava.nt.auth.presentation.login.LoginScreenRoot
 import id.slava.nt.auth.presentation.register.RegisterScreenRoot
+import id.slava.nt.core.notification.ActiveRunService
 import id.slava.nt.run.presentation.active_run.ActiveRunScreenRoot
 import id.slava.nt.run.presentation.run_overview.RunOverviewScreenRoot
 
@@ -134,18 +134,18 @@ private fun NavGraphBuilder.runGraph(
                     navController.navigateUp()
                 },
                 onServiceToggle = { shouldServiceRun ->
-//                    if (shouldServiceRun) {
-//                        context.startService(
-//                            ActiveRunService.createStartIntent(
-//                                context = context,
-//                                activityClass = MainActivity::class.java
-//                            )
-//                        )
-//                    } else {
-//                        context.startService(
-//                            ActiveRunService.createStopIntent(context = context)
-//                        )
-//                    }
+                    if (shouldServiceRun) {
+                        context.startService(
+                            ActiveRunService.createStartIntent(
+                                context = context,
+                                activityClass = MainActivity::class.java
+                            )
+                        )
+                    } else {
+                        context.startService(
+                            ActiveRunService.createStopIntent(context = context)
+                        )
+                    }
                 }
             )
         }

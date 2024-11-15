@@ -7,6 +7,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import id.slava.nt.core.notification.ActiveRunService
 import id.slava.nt.run.domain.RunningTracker
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.channels.Channel
@@ -31,8 +32,8 @@ class ActiveRunViewModel(
 ): ViewModel() {
 
     var state by mutableStateOf(ActiveRunState(
-//        shouldTrack = ActiveRunService.isServiceActive.value && runningTracker.isTracking.value,
-//        hasStartedRunning = ActiveRunService.isServiceActive.value
+        shouldTrack = ActiveRunService.isServiceActive.value && runningTracker.isTracking.value,
+        hasStartedRunning = ActiveRunService.isServiceActive.value
     ))
         private set
 
@@ -249,11 +250,11 @@ class ActiveRunViewModel(
 
     override fun onCleared() {
         super.onCleared()
-//        if(!ActiveRunService.isServiceActive.value) {
+        if(!ActiveRunService.isServiceActive.value) {
 //            applicationScope.launch {
 //                watchConnector.sendActionToWatch(MessagingAction.Untrackable)
 //            }
-//            runningTracker.stopObservingLocation()
-//        }
+            runningTracker.stopObservingLocation()
+        }
     }
 }
