@@ -15,7 +15,7 @@ import kotlin.time.Duration.Companion.minutes
 class RunOverviewViewModel(
 //    private val runRepository: RunRepository,
 //    private val syncRunScheduler: SyncRunScheduler,
-//    private val applicationScope: CoroutineScope,
+    private val applicationScope: CoroutineScope,
     private val sessionStorage: SessionStorage
 ): ViewModel() {
 
@@ -54,11 +54,11 @@ class RunOverviewViewModel(
     }
 
     private fun logout() {
-//        applicationScope.launch {
+        applicationScope.launch {
 //            syncRunScheduler.cancelAllSyncs()
 //            runRepository.deleteAllRuns()
 //            runRepository.logout()
-//            sessionStorage.set(null)
-//        }
+            sessionStorage.set(null)
+        }
     }
 }

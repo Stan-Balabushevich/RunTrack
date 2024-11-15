@@ -1,11 +1,13 @@
 package id.slava.nt.run.presentation.active_run
 
+import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import id.slava.nt.run.domain.RunningTracker
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -16,15 +18,16 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import timber.log.Timber
 import java.time.ZoneId
 import java.time.ZonedDateTime
 import kotlin.math.roundToInt
 
 class ActiveRunViewModel(
-//    private val runningTracker: RunningTracker,
+    private val runningTracker: RunningTracker,
 //    private val runRepository: RunRepository,
 //    private val watchConnector: WatchConnector,
-//    private val applicationScope: CoroutineScope
+    private val applicationScope: CoroutineScope
 ): ViewModel() {
 
     var state by mutableStateOf(ActiveRunState(
@@ -47,46 +50,47 @@ class ActiveRunViewModel(
         shouldTrack && hasPermission
     }.stateIn(viewModelScope, SharingStarted.Lazily, false)
 
-//    init {
-//        hasLocationPermission
-//            .onEach { hasPermission ->
-//                if(hasPermission) {
-//                    runningTracker.startObservingLocation()
-//                } else {
-//                    runningTracker.stopObservingLocation()
-//                }
-//            }
-//            .launchIn(viewModelScope)
-//
-//        isTracking
-//            .onEach { isTracking ->
-//                runningTracker.setIsTracking(isTracking)
-//            }
-//            .launchIn(viewModelScope)
-//
-//        runningTracker
-//            .currentLocation
-//            .onEach {
-//                state = state.copy(currentLocation = it?.location)
-//            }
-//            .launchIn(viewModelScope)
-//
-//        runningTracker
-//            .runData
-//            .onEach {
-//                state = state.copy(runData = it)
-//            }
-//            .launchIn(viewModelScope)
-//
-//        runningTracker
-//            .elapsedTime
-//            .onEach {
-//                state = state.copy(elapsedTime = it)
-//            }
-//            .launchIn(viewModelScope)
-//
+
+    init {
+        hasLocationPermission
+            .onEach { hasPermission ->
+                if(hasPermission) {
+                    runningTracker.startObservingLocation()
+                } else {
+                    runningTracker.stopObservingLocation()
+                }
+            }
+            .launchIn(viewModelScope)
+
+        isTracking
+            .onEach { isTracking ->
+                runningTracker.setIsTracking(isTracking)
+            }
+            .launchIn(viewModelScope)
+
+        runningTracker
+            .currentLocation
+            .onEach {
+                state = state.copy(currentLocation = it?.location)
+            }
+            .launchIn(viewModelScope)
+
+        runningTracker
+            .runData
+            .onEach {
+                state = state.copy(runData = it)
+            }
+            .launchIn(viewModelScope)
+
+        runningTracker
+            .elapsedTime
+            .onEach {
+                state = state.copy(elapsedTime = it)
+            }
+            .launchIn(viewModelScope)
+
 //        listenToWatchActions()
-//    }
+    }
 
     fun onAction(action: ActiveRunAction, triggeredOnWatch: Boolean = false) {
 //        if(!triggeredOnWatch) {

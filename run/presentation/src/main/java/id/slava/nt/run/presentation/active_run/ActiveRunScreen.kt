@@ -4,6 +4,7 @@ package id.slava.nt.run.presentation.active_run
 
 import android.Manifest
 import android.content.Context
+import android.graphics.Bitmap
 import android.os.Build
 import android.widget.Toast
 import androidx.activity.ComponentActivity
@@ -13,6 +14,8 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
@@ -33,11 +36,14 @@ import id.slava.nt.core.presentation.designsystem.components.PlrunScaffold
 import id.slava.nt.core.presentation.designsystem.components.PlrunToolbar
 import id.slava.nt.core.presentation.ui.ObserveAsEvents
 import id.slava.nt.run.presentation.R
+import id.slava.nt.run.presentation.active_run.components.RunDataCard
+import id.slava.nt.run.presentation.active_run.maps.TrackerMap
 import id.slava.nt.run.presentation.util.hasLocationPermission
 import id.slava.nt.run.presentation.util.hasNotificationPermission
 import id.slava.nt.run.presentation.util.shouldShowLocationPermissionRationale
 import id.slava.nt.run.presentation.util.shouldShowNotificationPermissionRationale
 import org.koin.androidx.compose.koinViewModel
+import java.io.ByteArrayOutputStream
 
 @Composable
 fun ActiveRunScreenRoot(
@@ -76,6 +82,7 @@ fun ActiveRunScreenRoot(
     )
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun ActiveRunScreen(
     state: ActiveRunState,
@@ -181,32 +188,32 @@ private fun ActiveRunScreen(
                 .fillMaxSize()
                 .background(MaterialTheme.colorScheme.surface)
         ) {
-//            TrackerMap(
-//                isRunFinished = state.isRunFinished,
-//                currentLocation = state.currentLocation,
-//                locations = state.runData.locations,
-//                onSnapshot = { bmp ->
-//                    val stream = ByteArrayOutputStream()
-//                    stream.use {
-//                        bmp.compress(
-//                            Bitmap.CompressFormat.JPEG,
-//                            80,
-//                            it
-//                        )
-//                    }
-//                    onAction(ActiveRunAction.OnRunProcessed(stream.toByteArray()))
-//                },
-//                modifier = Modifier
-//                    .fillMaxSize()
-//            )
-//            RunDataCard(
-//                elapsedTime = state.elapsedTime,
-//                runData = state.runData,
-//                modifier = Modifier
-//                    .padding(16.dp)
-//                    .padding(padding)
-//                    .fillMaxWidth()
-//            )
+            TrackerMap(
+                isRunFinished = state.isRunFinished,
+                currentLocation = state.currentLocation,
+                locations = state.runData.locations,
+                onSnapshot = { bmp ->
+                    val stream = ByteArrayOutputStream()
+                    stream.use {
+                        bmp.compress(
+                            Bitmap.CompressFormat.JPEG,
+                            80,
+                            it
+                        )
+                    }
+                    onAction(ActiveRunAction.OnRunProcessed(stream.toByteArray()))
+                },
+                modifier = Modifier
+                    .fillMaxSize()
+            )
+            RunDataCard(
+                elapsedTime = state.elapsedTime,
+                runData = state.runData,
+                modifier = Modifier
+                    .padding(16.dp)
+                    .padding(padding)
+                    .fillMaxWidth()
+            )
         }
     }
 

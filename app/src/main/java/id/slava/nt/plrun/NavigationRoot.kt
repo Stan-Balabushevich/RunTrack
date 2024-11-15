@@ -121,7 +121,7 @@ private fun NavGraphBuilder.runGraph(
             route = "active_run",
             deepLinks = listOf(
                 navDeepLink {
-                    uriPattern = "runique://active_run"
+                    uriPattern = "plrun://active_run"
                 }
             )
         ) {
