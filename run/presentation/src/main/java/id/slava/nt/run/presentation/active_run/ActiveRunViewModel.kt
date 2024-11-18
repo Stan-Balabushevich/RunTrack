@@ -7,7 +7,12 @@ import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import id.slava.nt.core.domain.location.Location
+import id.slava.nt.core.domain.run.Run
+import id.slava.nt.core.domain.run.RunRepository
 import id.slava.nt.core.notification.ActiveRunService
+import id.slava.nt.core.presentation.ui.asUiText
+import id.slava.nt.run.domain.LocationDataCalculator
 import id.slava.nt.run.domain.RunningTracker
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.channels.Channel
@@ -23,10 +28,11 @@ import timber.log.Timber
 import java.time.ZoneId
 import java.time.ZonedDateTime
 import kotlin.math.roundToInt
+import id.slava.nt.core.domain.util.Result
 
 class ActiveRunViewModel(
     private val runningTracker: RunningTracker,
-//    private val runRepository: RunRepository,
+    private val runRepository: RunRepository,
 //    private val watchConnector: WatchConnector,
     private val applicationScope: CoroutineScope
 ): ViewModel() {
@@ -165,42 +171,42 @@ class ActiveRunViewModel(
             return
         }
 
-//        viewModelScope.launch {
-//            val run = Run(
-//                id = null,
-//                duration = state.elapsedTime,
-//                dateTimeUtc = ZonedDateTime.now()
-//                    .withZoneSameInstant(ZoneId.of("UTC")),
-//                distanceMeters = state.runData.distanceMeters,
-//                location = state.currentLocation ?: Location(0.0, 0.0),
-//                maxSpeedKmh = LocationDataCalculator.getMaxSpeedKmh(locations),
-//                totalElevationMeters = LocationDataCalculator.getTotalElevationMeters(locations),
-//                mapPictureUrl = null,
-//                avgHeartRate = if(state.runData.heartRates.isEmpty()) {
-//                    null
-//                } else {
-//                    state.runData.heartRates.average().roundToInt()
-//                },
-//                maxHeartRate = if(state.runData.heartRates.isEmpty()) {
-//                    null
-//                } else {
-//                    state.runData.heartRates.max()
-//                }
-//            )
-//
-//            runningTracker.finishRun()
-//
-//            when(val result = runRepository.upsertRun(run, mapPictureBytes)) {
-//                is Result.Error -> {
-//                    eventChannel.send(ActiveRunEvent.Error(result.error.asUiText()))
-//                }
-//                is Result.Success -> {
-//                    eventChannel.send(ActiveRunEvent.RunSaved)
-//                }
-//            }
-//
-//            state = state.copy(isSavingRun = false)
-//        }
+        viewModelScope.launch {
+            val run = Run(
+                id = null,
+                duration = state.elapsedTime,
+                dateTimeUtc = ZonedDateTime.now()
+                    .withZoneSameInstant(ZoneId.of("UTC")),
+                distanceMeters = state.runData.distanceMeters,
+                location = state.currentLocation ?: Location(0.0, 0.0),
+                maxSpeedKmh = LocationDataCalculator.getMaxSpeedKmh(locations),
+                totalElevationMeters = LocationDataCalculator.getTotalElevationMeters(locations),
+                mapPictureUrl = null,
+                avgHeartRate = if(state.runData.heartRates.isEmpty()) {
+                    null
+                } else {
+                    state.runData.heartRates.average().roundToInt()
+                },
+                maxHeartRate = if(state.runData.heartRates.isEmpty()) {
+                    null
+                } else {
+                    state.runData.heartRates.max()
+                }
+            )
+
+            runningTracker.finishRun()
+
+            when(val result = runRepository.upsertRun(run, mapPictureBytes)) {
+                is Result.Error -> {
+                    eventChannel.send(ActiveRunEvent.Error(result.error.asUiText()))
+                }
+                is Result.Success -> {
+                    eventChannel.send(ActiveRunEvent.RunSaved)
+                }
+            }
+
+            state = state.copy(isSavingRun = false)
+        }
     }
 
     private fun listenToWatchActions() {
