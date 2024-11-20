@@ -122,35 +122,60 @@ fun TrackerMap(
         PlrunPolylines(locations = locations)
 
         MapEffect(locations, isRunFinished, triggerCapture, createSnapshotJob) { map ->
-            if(isRunFinished && triggerCapture && createSnapshotJob == null) {
+            if (isRunFinished && triggerCapture && createSnapshotJob == null) {
                 triggerCapture = false
+                if (locations.flatten().isNotEmpty()) {
+                    val boundsBuilder = LatLngBounds.builder()
 
-                val boundsBuilder = LatLngBounds.builder()
-                locations.flatten().forEach { location ->
-                    boundsBuilder
-                        .include(LatLng(
-                            location.location.location.lat,
-                            location.location.location.long,
-                        ))
-                }
-                map.moveCamera(
-                    CameraUpdateFactory.newLatLngBounds(
-                        boundsBuilder.build(),
-                        100
+                    if (locations.flatten().size == 1) {
+                        // Handle a single location by adding a small offset
+                        val singleLocation = locations.flatten().first()
+                        val lat = singleLocation.location.location.lat
+                        val lng = singleLocation.location.location.long
+
+                        boundsBuilder.include(LatLng(lat + 0.0001, lng + 0.0001))
+                        boundsBuilder.include(LatLng(lat - 0.0001, lng - 0.0001))
+                    } else {
+                        // Handle multiple locations normally
+                        locations.flatten().forEach { location ->
+                            boundsBuilder.include(
+                                LatLng(
+                                    location.location.location.lat,
+                                    location.location.location.long,
+                                )
+                            )
+                        }
+                    }
+
+                    map.moveCamera(
+                        CameraUpdateFactory.newLatLngBounds(
+                            boundsBuilder.build(),
+                            100
+                        )
                     )
-                )
+                } else {
+                    // Fallback when no locations are present
+                    map.moveCamera(
+                        CameraUpdateFactory.newLatLngZoom(
+                            LatLng(0.0, 0.0), // Default to (0,0) or any fallback location
+                            1f // Default zoom level
+                        )
+                    )
+                }
 
                 map.setOnCameraIdleListener {
                     createSnapshotJob?.cancel()
                     createSnapshotJob = GlobalScope.launch {
-                        // Make sure the map is sharp and focused before taking
-                        // the screenshot
+                        // Ensure the map is sharp and focused before taking the screenshot
                         delay(500L)
                         map.awaitSnapshot()?.let(onSnapshot)
                     }
                 }
+
+
             }
         }
+
 
         if(!isRunFinished && currentLocation != null) {
             MarkerComposable(

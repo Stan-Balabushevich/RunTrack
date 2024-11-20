@@ -9,6 +9,7 @@ import id.slava.nt.auth.presentation.di.authViewModelModule
 import id.slava.nt.core.data.di.coreDataModule
 import id.slava.nt.core.database.di.databaseModule
 import id.slava.nt.plrun.di.appModule
+import id.slava.nt.run.data.di.runDataModule
 import id.slava.nt.run.location.di.locationModule
 import id.slava.nt.run.network.di.networkModule
 import id.slava.nt.run.presentation.di.runPresentationModule
@@ -33,7 +34,7 @@ class PlrunApp: Application() {
         startKoin {
             androidLogger()
             androidContext(this@PlrunApp)
-//            workManagerFactory()
+            workManagerFactory()
             modules(
                 authDataModule,
                 authViewModelModule,
@@ -43,7 +44,7 @@ class PlrunApp: Application() {
                 locationModule,
                 databaseModule,
                 networkModule,
-//                runDataModule,
+                runDataModule,
 //                coreConnectivityDataModule
             )
         }

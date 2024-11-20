@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -29,6 +30,7 @@ import id.slava.nt.core.presentation.designsystem.components.PlrunScaffold
 import id.slava.nt.core.presentation.designsystem.components.PlrunToolbar
 import id.slava.nt.core.presentation.designsystem.components.util.DropDownItem
 import id.slava.nt.run.presentation.R
+import id.slava.nt.run.presentation.run_overview.components.RunListItem
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
@@ -52,6 +54,7 @@ fun RunOverviewScreenRoot(
     )
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun RunOverviewScreen(
     state: RunOverviewState,
@@ -110,19 +113,19 @@ private fun RunOverviewScreen(
             contentPadding = padding,
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-//            items(
-//                items = state.runs,
-//                key = { it.id }
-//            ) {
-//                RunListItem(
-//                    runUi = it,
-//                    onDeleteClick = {
-//                        onAction(RunOverviewAction.DeleteRun(it))
-//                    },
-//                    modifier = Modifier
-//                        .animateItemPlacement()
-//                )
-//            }
+            items(
+                items = state.runs,
+                key = { it.id }
+            ) {
+                RunListItem(
+                    runUi = it,
+                    onDeleteClick = {
+                        onAction(RunOverviewAction.DeleteRun(it))
+                    },
+                    modifier = Modifier
+                        .animateItemPlacement()
+                )
+            }
         }
     }
 }
