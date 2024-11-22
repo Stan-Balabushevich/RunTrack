@@ -121,6 +121,8 @@ fun TrackerMap(
     ) {
         PlrunPolylines(locations = locations)
 
+
+
         MapEffect(locations, isRunFinished, triggerCapture, createSnapshotJob) { map ->
             if (isRunFinished && triggerCapture && createSnapshotJob == null) {
                 triggerCapture = false
@@ -171,11 +173,8 @@ fun TrackerMap(
                         map.awaitSnapshot()?.let(onSnapshot)
                     }
                 }
-
-
             }
         }
-
 
         if(!isRunFinished && currentLocation != null) {
             MarkerComposable(
@@ -184,7 +183,7 @@ fun TrackerMap(
             ) {
                 Box(
                     modifier = Modifier
-                        .size(35.dp)
+                        .size(28.dp)
                         .clip(CircleShape)
                         .background(MaterialTheme.colorScheme.primary),
                     contentAlignment = Alignment.Center
@@ -193,10 +192,11 @@ fun TrackerMap(
                         imageVector = RunIcon,
                         contentDescription = null,
                         tint = MaterialTheme.colorScheme.onPrimary,
-                        modifier = Modifier.size(20.dp)
+                        modifier = Modifier.size(16.dp)
                     )
                 }
             }
         }
+
     }
 }

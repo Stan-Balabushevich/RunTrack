@@ -65,7 +65,7 @@ fun ActiveRunScreenRoot(
                     Toast.LENGTH_LONG
                 ).show()
             }
-            ActiveRunEvent.RunSaved -> onFinish()
+            ActiveRunEvent.RunFinished -> onFinish()
         }
     }
     ActiveRunScreen(

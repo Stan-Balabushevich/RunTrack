@@ -1,6 +1,5 @@
 package id.slava.nt.run.presentation.active_run
 
-import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -24,7 +23,6 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
-import timber.log.Timber
 import java.time.ZoneId
 import java.time.ZonedDateTime
 import kotlin.math.roundToInt
@@ -166,47 +164,52 @@ class ActiveRunViewModel(
 
     private fun finishRun(mapPictureBytes: ByteArray) {
         val locations = state.runData.locations
-//        if(locations.isEmpty() || locations.first().size <= 1) {
-//            state = state.copy(isSavingRun = false)
-//            runningTracker.finishRun()
-//            return
-//        }
-
-        viewModelScope.launch {
-            val run = Run(
-                id = null,
-                duration = state.elapsedTime,
-                dateTimeUtc = ZonedDateTime.now()
-                    .withZoneSameInstant(ZoneId.of("UTC")),
-                distanceMeters = state.runData.distanceMeters,
-                location = state.currentLocation ?: Location(0.0, 0.0),
-                maxSpeedKmh = LocationDataCalculator.getMaxSpeedKmh(locations),
-                totalElevationMeters = LocationDataCalculator.getTotalElevationMeters(locations),
-                mapPictureUrl = null,
-                avgHeartRate = if(state.runData.heartRates.isEmpty()) {
-                    null
-                } else {
-                    state.runData.heartRates.average().roundToInt()
-                },
-                maxHeartRate = if(state.runData.heartRates.isEmpty()) {
-                    null
-                } else {
-                    state.runData.heartRates.max()
-                }
-            )
-
-            runningTracker.finishRun()
-
-            when(val result = runRepository.upsertRun(run, mapPictureBytes)) {
-                is Result.Error -> {
-                    eventChannel.send(ActiveRunEvent.Error(result.error.asUiText()))
-                }
-                is Result.Success -> {
-                    eventChannel.send(ActiveRunEvent.RunSaved)
-                }
-            }
-
+        if(locations.isEmpty() || locations.first().size <= 1) {
             state = state.copy(isSavingRun = false)
+            runningTracker.finishRun()
+            viewModelScope.launch {
+                eventChannel.send(ActiveRunEvent.RunFinished)
+            }
+        }else{
+
+            viewModelScope.launch {
+                val run = Run(
+                    id = null,
+                    duration = state.elapsedTime,
+                    dateTimeUtc = ZonedDateTime.now()
+                        .withZoneSameInstant(ZoneId.of("UTC")),
+                    distanceMeters = state.runData.distanceMeters,
+                    location = state.currentLocation ?: Location(0.0, 0.0),
+                    maxSpeedKmh = LocationDataCalculator.getMaxSpeedKmh(locations),
+                    totalElevationMeters = LocationDataCalculator.getTotalElevationMeters(locations),
+                    mapPictureUrl = null,
+                    avgHeartRate = if(state.runData.heartRates.isEmpty()) {
+                        null
+                    } else {
+                        state.runData.heartRates.average().roundToInt()
+                    },
+                    maxHeartRate = if(state.runData.heartRates.isEmpty()) {
+                        null
+                    } else {
+                        state.runData.heartRates.max()
+                    }
+                )
+
+                runningTracker.finishRun()
+
+                when(val result = runRepository.upsertRun(run, mapPictureBytes)) {
+                    is Result.Error -> {
+                        eventChannel.send(ActiveRunEvent.Error(result.error.asUiText()))
+                        // temporary solution for error disk full
+                        eventChannel.send(ActiveRunEvent.RunFinished)
+                    }
+                    is Result.Success -> {
+                        eventChannel.send(ActiveRunEvent.RunFinished)
+                    }
+                }
+
+                state = state.copy(isSavingRun = false)
+            }
         }
     }
 

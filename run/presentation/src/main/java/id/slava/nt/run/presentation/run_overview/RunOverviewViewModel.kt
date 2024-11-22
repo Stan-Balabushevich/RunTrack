@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import id.slava.nt.core.domain.SessionStorage
 import id.slava.nt.core.domain.run.RunRepository
+import id.slava.nt.core.domain.run.SyncRunScheduler
 import id.slava.nt.run.presentation.run_overview.mapper.toRunUi
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.launchIn
@@ -16,7 +17,7 @@ import kotlin.time.Duration.Companion.minutes
 
 class RunOverviewViewModel(
     private val runRepository: RunRepository,
-//    private val syncRunScheduler: SyncRunScheduler,
+    private val syncRunScheduler: SyncRunScheduler,
     private val applicationScope: CoroutineScope,
     private val sessionStorage: SessionStorage
 ): ViewModel() {
@@ -25,11 +26,11 @@ class RunOverviewViewModel(
         private set
 
     init {
-//        viewModelScope.launch {
-//            syncRunScheduler.scheduleSync(
-//                type = SyncRunScheduler.SyncType.FetchRuns(30.minutes)
-//            )
-//        }
+        viewModelScope.launch {
+            syncRunScheduler.scheduleSync(
+                type = SyncRunScheduler.SyncType.FetchRuns(30.minutes)
+            )
+        }
 
         runRepository.getRuns().onEach { runs ->
             val runsUi = runs.map { it.toRunUi() }
@@ -57,7 +58,7 @@ class RunOverviewViewModel(
 
     private fun logout() {
         applicationScope.launch {
-//            syncRunScheduler.cancelAllSyncs()
+            syncRunScheduler.cancelAllSyncs()
             runRepository.deleteAllRuns()
             runRepository.logout()
             sessionStorage.set(null)

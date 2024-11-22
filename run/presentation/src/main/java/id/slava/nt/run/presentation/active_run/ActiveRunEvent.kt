@@ -5,5 +5,5 @@ import id.slava.nt.core.presentation.ui.UiText
 
 sealed interface ActiveRunEvent {
     data class Error(val error: UiText): ActiveRunEvent
-    data object RunSaved: ActiveRunEvent
+    data object RunFinished: ActiveRunEvent
 }

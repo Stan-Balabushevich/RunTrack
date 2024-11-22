@@ -2,12 +2,14 @@ package id.slava.nt.core.data.run
 
 import id.slava.nt.core.data.networking.get
 import id.slava.nt.core.database.dao.RunPendingSyncDao
+import id.slava.nt.core.database.mappers.toRun
 import id.slava.nt.core.domain.SessionStorage
 import id.slava.nt.core.domain.run.LocalRunDataSource
 import id.slava.nt.core.domain.run.RemoteRunDataSource
 import id.slava.nt.core.domain.run.Run
 import id.slava.nt.core.domain.run.RunId
 import id.slava.nt.core.domain.run.RunRepository
+import id.slava.nt.core.domain.run.SyncRunScheduler
 import id.slava.nt.core.domain.util.DataError
 import id.slava.nt.core.domain.util.EmptyResult
 import id.slava.nt.core.domain.util.Result
@@ -17,8 +19,11 @@ import io.ktor.client.plugins.auth.Auth
 import io.ktor.client.plugins.auth.providers.BearerAuthProvider
 import io.ktor.client.plugins.plugin
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class OfflineFirstRunRepository(
     private val localRunDataSource: LocalRunDataSource,
@@ -26,7 +31,7 @@ class OfflineFirstRunRepository(
     private val applicationScope: CoroutineScope,
     private val runPendingSyncDao: RunPendingSyncDao,
     private val sessionStorage: SessionStorage,
-//    private val syncRunScheduler: SyncRunScheduler,
+    private val syncRunScheduler: SyncRunScheduler,
     private val client: HttpClient
 ): RunRepository {
 
@@ -47,6 +52,10 @@ class OfflineFirstRunRepository(
 
     override suspend fun upsertRun(run: Run, mapPicture: ByteArray): EmptyResult<DataError> {
         val localResult = localRunDataSource.upsertRun(run)
+
+       // TODO Need to be fixed.  if database return error there is some issue in ui
+        // return Result.Error(DataError.Local.DISK_FULL).asEmptyDataResult()
+
         if(localResult !is Result.Success) {
             return localResult.asEmptyDataResult()
         }
@@ -59,14 +68,14 @@ class OfflineFirstRunRepository(
 
         return when(remoteResult) {
             is Result.Error -> {
-//                applicationScope.launch {
-//                    syncRunScheduler.scheduleSync(
-//                        type = SyncRunScheduler.SyncType.CreateRun(
-//                            run = runWithId,
-//                            mapPictureBytes = mapPicture
-//                        )
-//                    )
-//                }.join()
+                applicationScope.launch {
+                    syncRunScheduler.scheduleSync(
+                        type = SyncRunScheduler.SyncType.CreateRun(
+                            run = runWithId,
+                            mapPictureBytes = mapPicture
+                        )
+                    )
+                }.join()
                 Result.Success(Unit)
             }
             is Result.Success -> {
@@ -83,69 +92,69 @@ class OfflineFirstRunRepository(
         // Edge case where the run is created in offline-mode,
         // and then deleted in offline-mode as well. In that case,
         // we don't need to sync anything.
-//        val isPendingSync = runPendingSyncDao.getRunPendingSyncEntity(id) != null
-//        if(isPendingSync) {
-//            runPendingSyncDao.deleteRunPendingSyncEntity(id)
-//            return
-//        }
+        val isPendingSync = runPendingSyncDao.getRunPendingSyncEntity(id) != null
+        if(isPendingSync) {
+            runPendingSyncDao.deleteRunPendingSyncEntity(id)
+            return
+        }
 
         val remoteResult = applicationScope.async {
             remoteRunDataSource.deleteRun(id)
         }.await()
 
         if(remoteResult is Result.Error) {
-//            applicationScope.launch {
-//                syncRunScheduler.scheduleSync(
-//                    type = SyncRunScheduler.SyncType.DeleteRun(id)
-//                )
-//            }.join()
+            applicationScope.launch {
+                syncRunScheduler.scheduleSync(
+                    type = SyncRunScheduler.SyncType.DeleteRun(id)
+                )
+            }.join()
         }
     }
 
     override suspend fun syncPendingRuns() {
-//        withContext(Dispatchers.IO) {
-//            val userId = sessionStorage.get()?.userId ?: return@withContext
-//
-//            val createdRuns = async {
-//                runPendingSyncDao.getAllRunPendingSyncEntities(userId)
-//            }
-//            val deletedRuns = async {
-//                runPendingSyncDao.getAllDeletedRunSyncEntities(userId)
-//            }
-//
-//            val createJobs = createdRuns
-//                .await()
-//                .map {
-//                    launch {
-//                        val run = it.run.toRun()
-//                        when(remoteRunDataSource.postRun(run, it.mapPictureBytes)) {
-//                            is Result.Error -> Unit
-//                            is Result.Success -> {
-//                                applicationScope.launch {
-//                                    runPendingSyncDao.deleteRunPendingSyncEntity(it.runId)
-//                                }.join()
-//                            }
-//                        }
-//                    }
-//                }
-//            val deleteJobs = deletedRuns
-//                .await()
-//                .map {
-//                    launch {
-//                        when(remoteRunDataSource.deleteRun(it.runId)) {
-//                            is Result.Error -> Unit
-//                            is Result.Success -> {
-//                                applicationScope.launch {
-//                                    runPendingSyncDao.deleteDeletedRunSyncEntity(it.runId)
-//                                }.join()
-//                            }
-//                        }
-//                    }
-//                }
-//
-//            createJobs.forEach { it.join() }
-//            deleteJobs.forEach { it.join() }
-//        }
+        withContext(Dispatchers.IO) {
+            val userId = sessionStorage.get()?.userId ?: return@withContext
+
+            val createdRuns = async {
+                runPendingSyncDao.getAllRunPendingSyncEntities(userId)
+            }
+            val deletedRuns = async {
+                runPendingSyncDao.getAllDeletedRunSyncEntities(userId)
+            }
+
+            val createJobs = createdRuns
+                .await()
+                .map {
+                    launch {
+                        val run = it.run.toRun()
+                        when(remoteRunDataSource.postRun(run, it.mapPictureBytes)) {
+                            is Result.Error -> Unit
+                            is Result.Success -> {
+                                applicationScope.launch {
+                                    runPendingSyncDao.deleteRunPendingSyncEntity(it.runId)
+                                }.join()
+                            }
+                        }
+                    }
+                }
+            val deleteJobs = deletedRuns
+                .await()
+                .map {
+                    launch {
+                        when(remoteRunDataSource.deleteRun(it.runId)) {
+                            is Result.Error -> Unit
+                            is Result.Success -> {
+                                applicationScope.launch {
+                                    runPendingSyncDao.deleteDeletedRunSyncEntity(it.runId)
+                                }.join()
+                            }
+                        }
+                    }
+                }
+
+            createJobs.forEach { it.join() }
+            deleteJobs.forEach { it.join() }
+        }
     }
 
     override suspend fun deleteAllRuns() {
