@@ -138,6 +138,7 @@ plrun-android-library = { id = "plrun.android.library", version = "unspecified" 
 plrun-android-library-compose = { id = "plrun.android.library.compose", version = "unspecified" }
 plrun-android-feature-ui = { id = "plrun.android.feature.ui", version = "unspecified" }
 plrun-android-room = { id = "plrun.android.room", version = "unspecified" }
+plrun-android-dynamic-feature = { id = "plrun.android.dynamic.feature", version = "unspecified" }
 plrun-jvm-library = { id = "plrun.jvm.library", version = "unspecified" }
 plrun-jvm-ktor = { id = "plrun.jvm.ktor", version = "unspecified" }
 

@@ -14,6 +14,7 @@ android {
             useSupportLibrary = true
         }
     }
+    dynamicFeatures += setOf(":analitycs:analitycs_feature")
 }
 
 dependencies {

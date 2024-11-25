@@ -65,7 +65,7 @@ class ActiveRunService: Service() {
             createNotificationChannel()
 
             val activityIntent = Intent(applicationContext, activityClass).apply {
-                data = "plrun://active_run".toUri()
+                data = DEEP_LINK_TO_ACTIVE_RUN_SCREEN.toUri()
                 addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
             }
             val pendingIntent = TaskStackBuilder.create(applicationContext).run {

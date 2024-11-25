@@ -12,15 +12,19 @@ import id.slava.nt.auth.presentation.intro.IntroScreenRoot
 import id.slava.nt.auth.presentation.login.LoginScreenRoot
 import id.slava.nt.auth.presentation.register.RegisterScreenRoot
 import id.slava.nt.core.notification.ActiveRunService
+import id.slava.nt.core.notification.DEEP_LINK_TO_ACTIVE_RUN_SCREEN
 import id.slava.nt.run.presentation.active_run.ActiveRunScreenRoot
 import id.slava.nt.run.presentation.run_overview.RunOverviewScreenRoot
 
+const val AUTH_ROUTE = "auth"
+const val RUN_ROUTE = "run"
+const val ACTIVE_RUN_ROUTE = "active_run"
 
 @Composable
 fun NavigationRoot(
     navController: NavHostController,
     isLoggedIn: Boolean,
-//    onAnalyticsClick: () -> Unit
+    onAnalyticsClick: () -> Unit
 ) {
     NavHost(
         navController = navController,
@@ -30,7 +34,7 @@ fun NavigationRoot(
     ) {
         authGraph(navController)
         runGraph(navController,
-//            onAnalyticsClick
+            onAnalyticsClick
         )
     }
 }
@@ -93,7 +97,7 @@ private fun NavGraphBuilder.authGraph(navController: NavHostController) {
 
 private fun NavGraphBuilder.runGraph(
     navController: NavHostController,
-//    onAnalyticsClick: () -> Unit
+    onAnalyticsClick: () -> Unit
 ) {
     navigation(
         startDestination = "run_overview",
@@ -106,8 +110,7 @@ private fun NavGraphBuilder.runGraph(
                 onStartRunClick = {
                     navController.navigate("active_run")
                 },
-//                onAnalyticsClick = onAnalyticsClick,
-                onAnalyticsClick = {},
+                onAnalyticsClick = onAnalyticsClick,
                 onLogoutClick = {
                     navController.navigate("auth") {
                         popUpTo("run") {
@@ -121,7 +124,7 @@ private fun NavGraphBuilder.runGraph(
             route = "active_run",
             deepLinks = listOf(
                 navDeepLink {
-                    uriPattern = "plrun://active_run"
+                    uriPattern = DEEP_LINK_TO_ACTIVE_RUN_SCREEN
                 }
             )
         ) {
