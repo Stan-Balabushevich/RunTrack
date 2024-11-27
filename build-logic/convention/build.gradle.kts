@@ -30,6 +30,10 @@ gradlePlugin {
             id = "plrun.android.library.compose"
             implementationClass = "AndroidLibraryComposeConventionPlugin"
         }
+        register("androidApplicationWearCompose") {
+            id = "plrun.android.application.wear.compose"
+            implementationClass = "AndroidApplicationWearComposeConventionPlugin"
+        }
         register("androidFeatureUi") {
             id = "plrun.android.feature.ui"
             implementationClass = "AndroidFeatureUiConventionPlugin"
