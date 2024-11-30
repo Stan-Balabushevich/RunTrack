@@ -10,9 +10,12 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.ui.Modifier
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
+import androidx.wear.compose.material3.Button
 import androidx.wear.compose.material3.Text
+import id.slava.nt.core.presentation.designsystem_wear.PlrunTheme
 
 
 class MainActivity : ComponentActivity() {
@@ -22,12 +25,17 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
 
         setContent {
-            Box(modifier = Modifier.fillMaxSize(),
-                contentAlignment = androidx.compose.ui.Alignment.Center
-                ){
-                Text("Hello World Wear OS")
-            }
 
+            PlrunTheme {
+                Box(modifier = Modifier.fillMaxSize(),
+                    contentAlignment = androidx.compose.ui.Alignment.Center
+                ){
+                    Button(modifier = Modifier.fillMaxWidth(),
+                        onClick = {}) {
+                        Text(text = "Click me")
+                    }
+                }
+            }
         }
     }
 }
