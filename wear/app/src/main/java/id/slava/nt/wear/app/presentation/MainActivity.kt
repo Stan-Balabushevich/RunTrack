@@ -16,6 +16,7 @@ import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.wear.compose.material3.Button
 import androidx.wear.compose.material3.Text
 import id.slava.nt.core.presentation.designsystem_wear.PlrunTheme
+import id.slava.nt.wear.run.presentation.TrackerScreenRoot
 
 
 class MainActivity : ComponentActivity() {
@@ -27,14 +28,9 @@ class MainActivity : ComponentActivity() {
         setContent {
 
             PlrunTheme {
-                Box(modifier = Modifier.fillMaxSize(),
-                    contentAlignment = androidx.compose.ui.Alignment.Center
-                ){
-                    Button(modifier = Modifier.fillMaxWidth(),
-                        onClick = {}) {
-                        Text(text = "Click me")
-                    }
-                }
+                TrackerScreenRoot(
+                    onServiceToggle = {}
+                )
             }
         }
     }
