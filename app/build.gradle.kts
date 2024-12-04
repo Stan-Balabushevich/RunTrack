@@ -69,6 +69,8 @@ dependencies {
     implementation(projects.core.data)
     implementation(projects.core.database)
     implementation(projects.core.notification)
+    implementation(projects.core.connectivity.data)
+    implementation(projects.core.connectivity.domain)
 
     implementation(projects.auth.presentation)
     implementation(projects.auth.domain)
@@ -79,5 +81,4 @@ dependencies {
     implementation(projects.run.data)
     implementation(projects.run.location)
     implementation(projects.run.network)
-
 }

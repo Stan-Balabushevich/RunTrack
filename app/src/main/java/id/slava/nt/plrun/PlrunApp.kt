@@ -6,6 +6,7 @@ import com.google.android.play.core.splitcompat.SplitCompat
 
 import id.slava.nt.auth.data.di.authDataModule
 import id.slava.nt.auth.presentation.di.authViewModelModule
+import id.slava.nt.core.connectivity.data.di.coreConnectivityDataModule
 import id.slava.nt.core.data.di.coreDataModule
 import id.slava.nt.core.database.di.databaseModule
 import id.slava.nt.plrun.di.appModule
@@ -45,7 +46,7 @@ class PlrunApp: Application() {
                 databaseModule,
                 networkModule,
                 runDataModule,
-//                coreConnectivityDataModule
+                coreConnectivityDataModule
             )
         }
     }

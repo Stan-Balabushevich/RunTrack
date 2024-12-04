@@ -27,11 +27,14 @@ import java.time.ZoneId
 import java.time.ZonedDateTime
 import kotlin.math.roundToInt
 import id.slava.nt.core.domain.util.Result
+import id.slava.nt.run.domain.WatchConnector
+import kotlinx.coroutines.flow.filterNotNull
+import timber.log.Timber
 
 class ActiveRunViewModel(
     private val runningTracker: RunningTracker,
     private val runRepository: RunRepository,
-//    private val watchConnector: WatchConnector,
+    private val watchConnector: WatchConnector,
     private val applicationScope: CoroutineScope
 ): ViewModel() {
 
@@ -57,6 +60,15 @@ class ActiveRunViewModel(
 
 
     init {
+
+        watchConnector.connectedDevice
+            .filterNotNull()
+            .onEach { connectedDevice ->
+                Timber.d("Connected device: ${connectedDevice.displayName}")
+
+
+            }.launchIn(viewModelScope)
+
         hasLocationPermission
             .onEach { hasPermission ->
                 if(hasPermission) {

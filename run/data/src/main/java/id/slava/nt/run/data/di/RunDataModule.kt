@@ -5,6 +5,8 @@ import id.slava.nt.run.data.CreateRunWorker
 import id.slava.nt.run.data.DeleteRunWorker
 import id.slava.nt.run.data.FetchRunsWorker
 import id.slava.nt.run.data.SyncRunWorkerScheduler
+import id.slava.nt.run.data.connectivity.PhoneToWatchConnector
+import id.slava.nt.run.domain.WatchConnector
 import org.koin.androidx.workmanager.dsl.workerOf
 import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.bind
@@ -16,5 +18,5 @@ val runDataModule = module {
     workerOf(::DeleteRunWorker)
 
     singleOf(::SyncRunWorkerScheduler).bind<SyncRunScheduler>()
-//    singleOf(::PhoneToWatchConnector).bind<WatchConnector>()
+    singleOf(::PhoneToWatchConnector).bind<WatchConnector>()
 }

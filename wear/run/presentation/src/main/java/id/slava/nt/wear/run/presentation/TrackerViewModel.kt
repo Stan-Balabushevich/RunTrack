@@ -2,12 +2,17 @@
 
 package id.slava.nt.wear.run.presentation
 
+import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import id.slava.nt.core.connectivity.domain.messaging.MessagingAction
+import id.slava.nt.core.domain.Timer
+import id.slava.nt.wear.run.domain.ExerciseTracker
+import id.slava.nt.wear.run.domain.PhoneConnector
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.channels.Channel
@@ -26,8 +31,8 @@ import kotlin.time.Duration
 import kotlin.time.Duration.Companion.seconds
 
 class TrackerViewModel(
-//    private val exerciseTracker: ExerciseTracker,
-//    private val phoneConnector: PhoneConnector,
+    private val exerciseTracker: ExerciseTracker,
+    private val phoneConnector: PhoneConnector,
 //    private val runningTracker: RunningTracker
 ): ViewModel() {
 
@@ -46,6 +51,29 @@ class TrackerViewModel(
 
     private val eventChannel = Channel<TrackerEvent>()
     val events = eventChannel.receiveAsFlow()
+
+
+    init {
+
+                phoneConnector
+            .connectedNode
+            .filterNotNull()
+            .onEach { connectedNode ->
+                state = state.copy(
+                    isConnectedPhoneNearby = connectedNode.isNearby
+                )
+                Log.d("TrackerViewModel","Connected node: $connectedNode")
+            }
+            .combine(isTracking) { _, isTracking ->
+                if(!isTracking) {
+                    phoneConnector.sendActionToPhone(MessagingAction.ConnectionRequest)
+                }
+            }
+            .launchIn(viewModelScope)
+
+
+    }
+
 
 //    init {
 //        phoneConnector
@@ -145,54 +173,54 @@ class TrackerViewModel(
 //        listenToPhoneActions()
 //    }
 //
-//    fun onAction(action: TrackerAction, triggeredOnPhone: Boolean = false) {
-//        if(!triggeredOnPhone) {
+    fun onAction(action: TrackerAction, triggeredOnPhone: Boolean = false) {
+        if(!triggeredOnPhone) {
 //            sendActionToPhone(action)
-//        }
-//        when(action) {
-//            is TrackerAction.OnBodySensorPermissionResult -> {
-//                hasBodySensorPermission.value = action.isGranted
-//                if(action.isGranted) {
-//                    viewModelScope.launch {
-//                        val isHeartRateTrackingSupported = exerciseTracker.isHeartRateTrackingSupported()
-//                        state = state.copy(
-//                            canTrackHeartRate = isHeartRateTrackingSupported
-//                        )
-//                    }
-//                }
-//            }
-//            TrackerAction.OnFinishRunClick -> {
-//                viewModelScope.launch {
-//                    exerciseTracker.stopExercise()
-//                    eventChannel.send(TrackerEvent.RunFinished)
-//
-//                    state = state.copy(
-//                        elapsedDuration = Duration.ZERO,
-//                        distanceMeters = 0,
-//                        heartRate = 0,
-//                        hasStartedRunning = false,
-//                        isRunActive = false
-//                    )
-//                }
-//            }
-//            TrackerAction.OnToggleRunClick -> {
-//                if(state.isTrackable) {
-//                    state = state.copy(
-//                        isRunActive = !state.isRunActive
-//                    )
-//                }
-//            }
-//            is TrackerAction.OnEnterAmbientMode -> {
-//                state = state.copy(
-//                    isAmbientMode = true,
-//                    burnInProtectionRequired = action.burnInProtectionRequired
-//                )
-//            }
-//            TrackerAction.OnExitAmbientMode -> {
-//                state = state.copy(isAmbientMode = false)
-//            }
-//        }
-//    }
+        }
+        when(action) {
+            is TrackerAction.OnBodySensorPermissionResult -> {
+                hasBodySensorPermission.value = action.isGranted
+                if(action.isGranted) {
+                    viewModelScope.launch {
+                        val isHeartRateTrackingSupported = exerciseTracker.isHeartRateTrackingSupported()
+                        state = state.copy(
+                            canTrackHeartRate = isHeartRateTrackingSupported
+                        )
+                    }
+                }
+            }
+            TrackerAction.OnFinishRunClick -> {
+                viewModelScope.launch {
+                    exerciseTracker.stopExercise()
+                    eventChannel.send(TrackerEvent.RunFinished)
+
+                    state = state.copy(
+                        elapsedDuration = Duration.ZERO,
+                        distanceMeters = 0,
+                        heartRate = 0,
+                        hasStartedRunning = false,
+                        isRunActive = false
+                    )
+                }
+            }
+            TrackerAction.OnToggleRunClick -> {
+                if(state.isTrackable) {
+                    state = state.copy(
+                        isRunActive = !state.isRunActive
+                    )
+                }
+            }
+            is TrackerAction.OnEnterAmbientMode -> {
+                state = state.copy(
+                    isAmbientMode = true,
+                    burnInProtectionRequired = action.burnInProtectionRequired
+                )
+            }
+            TrackerAction.OnExitAmbientMode -> {
+                state = state.copy(isAmbientMode = false)
+            }
+        }
+    }
 //
 //    private fun sendActionToPhone(action: TrackerAction) {
 //        viewModelScope.launch {

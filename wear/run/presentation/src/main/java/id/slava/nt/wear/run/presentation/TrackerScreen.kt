@@ -80,8 +80,7 @@ fun TrackerScreenRoot(
     }
     TrackerScreen(
         state = viewModel.state,
-        onAction = {}
-//        onAction = viewModel::onAction
+        onAction = viewModel::onAction
     )
 }
 
