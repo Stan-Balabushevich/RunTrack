@@ -2,6 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
     <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_HEALTH" />
 
     <uses-feature android:name="android.hardware.type.watch" />
 
@@ -23,6 +24,9 @@
         <meta-data
             android:name="com.google.android.wearable.standalone"
             android:value="false" />
+
+        <service android:name="id.slava.nt.core.notification.ActiveRunService"
+            android:foregroundServiceType="health"/>
 
         <activity
             android:name=".presentation.MainActivity"
