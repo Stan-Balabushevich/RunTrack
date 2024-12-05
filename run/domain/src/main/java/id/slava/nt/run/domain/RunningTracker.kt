@@ -1,5 +1,6 @@
 package id.slava.nt.run.domain
 
+import id.slava.nt.core.connectivity.domain.messaging.MessagingAction
 import id.slava.nt.core.domain.Timer
 import id.slava.nt.core.domain.location.LocationTimestamp
 import kotlinx.coroutines.CoroutineScope
@@ -7,7 +8,6 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.combineTransform
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.filterIsInstance
@@ -29,7 +29,7 @@ import kotlin.time.Duration.Companion.seconds
 class RunningTracker(
     private val locationObserver: LocationObserver,
     private val applicationScope: CoroutineScope,
-//    private val watchConnector: WatchConnector
+    private val watchConnector: WatchConnector
 ) {
     private val _runData = MutableStateFlow(RunData())
     val runData = _runData.asStateFlow()
@@ -55,22 +55,22 @@ class RunningTracker(
             null
         )
 
-//    private val heartRates = isTracking
-//        .flatMapLatest { isTracking ->
-//            if(isTracking) {
-//                watchConnector.messagingActions
-//            } else flowOf()
-//        }
-//        .filterIsInstance<com.plcoding.core.connectivity.domain.messaging.MessagingAction.HeartRateUpdate>()
-//        .map { it.heartRate }
-//        .runningFold(initial = emptyList<Int>()) { currentHeartRates, newHeartRate ->
-//            currentHeartRates + newHeartRate
-//        }
-//        .stateIn(
-//            applicationScope,
-//            SharingStarted.Lazily,
-//            emptyList()
-//        )
+    private val heartRates = isTracking
+        .flatMapLatest { isTracking ->
+            if(isTracking) {
+                watchConnector.messagingActions
+            } else flowOf()
+        }
+        .filterIsInstance<MessagingAction.HeartRateUpdate>()
+        .map { it.heartRate }
+        .runningFold(initial = emptyList<Int>()) { currentHeartRates, newHeartRate ->
+            currentHeartRates + newHeartRate
+        }
+        .stateIn(
+            applicationScope,
+            SharingStarted.Lazily,
+            emptyList()
+        )
 
     init {
         _isTracking
@@ -138,27 +138,27 @@ class RunningTracker(
             }
             .launchIn(applicationScope)
 
-//        elapsedTime
-//            .onEach {
-//                watchConnector.sendActionToWatch(
-//                    com.plcoding.core.connectivity.domain.messaging.MessagingAction.TimeUpdate(
-//                        it
-//                    )
-//                )
-//            }
-//            .launchIn(applicationScope)
-//
-//        runData
-//            .map { it.distanceMeters }
-//            .distinctUntilChanged()
-//            .onEach {
-//                watchConnector.sendActionToWatch(
-//                    com.plcoding.core.connectivity.domain.messaging.MessagingAction.DistanceUpdate(
-//                        it
-//                    )
-//                )
-//            }
-//            .launchIn(applicationScope)
+        elapsedTime
+            .onEach {
+                watchConnector.sendActionToWatch(
+                    MessagingAction.TimeUpdate(
+                        it
+                    )
+                )
+            }
+            .launchIn(applicationScope)
+
+        runData
+            .map { it.distanceMeters }
+            .distinctUntilChanged()
+            .onEach {
+                watchConnector.sendActionToWatch(
+                    MessagingAction.DistanceUpdate(
+                        it
+                    )
+                )
+            }
+            .launchIn(applicationScope)
     }
 
     fun setIsTracking(isTracking: Boolean) {
@@ -167,12 +167,12 @@ class RunningTracker(
 
     fun startObservingLocation() {
         isObservingLocation.value = true
-//        watchConnector.setIsTrackable(true)
+        watchConnector.setIsTrackable(true)
     }
 
     fun stopObservingLocation() {
         isObservingLocation.value = false
-//        watchConnector.setIsTrackable(false)
+        watchConnector.setIsTrackable(false)
     }
 
     fun finishRun() {

@@ -70,6 +70,6 @@ class WearMessagingClient(
     }
 
     companion object {
-        private const val BASE_PATH_MESSAGING_ACTION = "runique/messaging_action"
+        private const val BASE_PATH_MESSAGING_ACTION = "plrun/messaging_action"
     }
 }
