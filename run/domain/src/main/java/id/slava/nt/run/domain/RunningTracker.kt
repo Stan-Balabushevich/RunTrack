@@ -8,6 +8,7 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.combineTransform
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.filterIsInstance
@@ -72,6 +73,95 @@ class RunningTracker(
             emptyList()
         )
 
+//    init {
+//        _isTracking
+//            .onEach { isTracking ->
+//                if(!isTracking) {
+//                    val newList = buildList {
+//                        addAll(runData.value.locations)
+//                        add(emptyList<LocationTimestamp>())
+//                    }.toList()
+//                    _runData.update { it.copy(
+//                        locations = newList
+//                    ) }
+//                }
+//            }
+//            .flatMapLatest { isTracking ->
+//                if(isTracking) {
+//                    Timer.timeAndEmit()
+//                } else flowOf()
+//            }
+//            .onEach {
+//                _elapsedTime.value += it
+//            }
+//            .launchIn(applicationScope)
+//
+//        currentLocation
+//            .filterNotNull()
+//            .combineTransform(_isTracking) { location, isTracking ->
+//                if(isTracking) {
+//                    emit(location)
+//                }
+//            }
+//            .zip(_elapsedTime) { location, elapsedTime ->
+//                LocationTimestamp(
+//                    location = location,
+//                    durationTimestamp = elapsedTime
+//                )
+//            }
+//            .onEach { location ->
+//                val currentLocations = runData.value.locations
+//                val lastLocationsList = if(currentLocations.isNotEmpty()) {
+//                    currentLocations.last() + location
+//                } else listOf(location)
+//                val newLocationsList = currentLocations.replaceLast(lastLocationsList)
+//
+//                val distanceMeters =
+//                    LocationDataCalculator.getTotalDistanceMeters(
+//                        locations = newLocationsList
+//                    )
+//                val distanceKm = distanceMeters / 1000.0
+//                val currentDuration = location.durationTimestamp
+//
+//                val avgSecondsPerKm = if(distanceKm == 0.0) {
+//                    0
+//                } else {
+//                    (currentDuration.inWholeSeconds / distanceKm).roundToInt()
+//                }
+//
+//                _runData.update {
+//                    RunData(
+//                        distanceMeters = distanceMeters,
+//                        pace = avgSecondsPerKm.seconds,
+//                        locations = newLocationsList
+//                    )
+//                }
+//            }
+//            .launchIn(applicationScope)
+//
+//        elapsedTime
+//            .onEach {
+//                watchConnector.sendActionToWatch(
+//                    MessagingAction.TimeUpdate(
+//                        it
+//                    )
+//                )
+//            }
+//            .launchIn(applicationScope)
+//
+//        runData
+//            .map { it.distanceMeters }
+//            .distinctUntilChanged()
+//            .onEach {
+//                watchConnector.sendActionToWatch(
+//                    MessagingAction.DistanceUpdate(
+//                        it
+//                    )
+//                )
+//            }
+//            .launchIn(applicationScope)
+//    }
+
     init {
         _isTracking
             .onEach { isTracking ->
@@ -108,17 +198,16 @@ class RunningTracker(
                     durationTimestamp = elapsedTime
                 )
             }
-            .onEach { location ->
+            .combine(heartRates) { location, heartRates ->
                 val currentLocations = runData.value.locations
                 val lastLocationsList = if(currentLocations.isNotEmpty()) {
                     currentLocations.last() + location
                 } else listOf(location)
                 val newLocationsList = currentLocations.replaceLast(lastLocationsList)
 
-                val distanceMeters =
-                    LocationDataCalculator.getTotalDistanceMeters(
-                        locations = newLocationsList
-                    )
+                val distanceMeters = LocationDataCalculator.getTotalDistanceMeters(
+                    locations = newLocationsList
+                )
                 val distanceKm = distanceMeters / 1000.0
                 val currentDuration = location.durationTimestamp
 
@@ -132,7 +221,8 @@ class RunningTracker(
                     RunData(
                         distanceMeters = distanceMeters,
                         pace = avgSecondsPerKm.seconds,
-                        locations = newLocationsList
+                        locations = newLocationsList,
+                        heartRates = heartRates
                     )
                 }
             }
@@ -140,11 +230,7 @@ class RunningTracker(
 
         elapsedTime
             .onEach {
-                watchConnector.sendActionToWatch(
-                    MessagingAction.TimeUpdate(
-                        it
-                    )
-                )
+                watchConnector.sendActionToWatch(MessagingAction.TimeUpdate(it))
             }
             .launchIn(applicationScope)
 
@@ -152,11 +238,7 @@ class RunningTracker(
             .map { it.distanceMeters }
             .distinctUntilChanged()
             .onEach {
-                watchConnector.sendActionToWatch(
-                    MessagingAction.DistanceUpdate(
-                        it
-                    )
-                )
+                watchConnector.sendActionToWatch(MessagingAction.DistanceUpdate(it))
             }
             .launchIn(applicationScope)
     }
