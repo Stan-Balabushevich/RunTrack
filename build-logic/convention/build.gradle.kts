@@ -54,5 +54,13 @@ gradlePlugin {
             id = "plrun.jvm.ktor"
             implementationClass = "JvmKtorConventionPlugin"
         }
+        register("jvmJunit5") {
+            id = "plrun.jvm.junit5"
+            implementationClass = "JvmJUnit5ConventionPlugin"
+        }
+        register("androidJunit5") {
+            id = "plrun.android.junit5"
+            implementationClass = "AndroidJUnit5ConventionPlugin"
+        }
     }
 }
