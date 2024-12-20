@@ -1,5 +1,6 @@
 plugins {
     alias(libs.plugins.plrun.android.application.compose)
+    alias(libs.plugins.plrun.android.junit5)
     alias(libs.plugins.plrun.jvm.ktor)
     alias(libs.plugins.mapsplatform.secrets.plugin)
 }
@@ -71,6 +72,7 @@ dependencies {
     implementation(projects.core.notification)
     implementation(projects.core.connectivity.data)
     implementation(projects.core.connectivity.domain)
+    implementation(projects.core.androidtest)
 
     implementation(projects.auth.presentation)
     implementation(projects.auth.domain)
@@ -81,4 +83,5 @@ dependencies {
     implementation(projects.run.data)
     implementation(projects.run.location)
     implementation(projects.run.network)
+
 }
