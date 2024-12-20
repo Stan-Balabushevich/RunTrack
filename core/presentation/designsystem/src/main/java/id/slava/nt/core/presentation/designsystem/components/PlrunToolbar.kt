@@ -36,6 +36,7 @@ import androidx.compose.ui.unit.dp
 import id.slava.nt.core.presentation.designsystem.AnalyticsIcon
 import id.slava.nt.core.presentation.designsystem.ArrowLeftIcon
 import id.slava.nt.core.presentation.designsystem.LogoIcon
+import id.slava.nt.core.presentation.designsystem.PlrunBlue
 import id.slava.nt.core.presentation.designsystem.PlrunGreen
 import id.slava.nt.core.presentation.designsystem.PlrunTheme
 import id.slava.nt.core.presentation.designsystem.Poppins
@@ -140,7 +141,7 @@ private fun PlrunToolbarPreview() {
                 Icon(
                     imageVector = LogoIcon,
                     contentDescription = null,
-                    tint = PlrunGreen,
+                    tint = PlrunBlue,
                     modifier = Modifier
                         .size(35.dp)
                 )

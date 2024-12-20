@@ -9,12 +9,12 @@ import androidx.compose.ui.platform.LocalView
 import androidx.core.view.WindowCompat
 
 val DarkColorScheme = darkColorScheme(
-    primary = PlrunGreen,
+    primary = PlrunBlue,
     background = PlrunBlack,
     surface = PlrunDarkGray,
     secondary = PlrunWhite,
     tertiary = PlrunWhite,
-    primaryContainer = PlrunGreen30,
+    primaryContainer = PlrunBlue30,
     onPrimary = PlrunBlack,
     onBackground = PlrunWhite,
     onSurface = PlrunWhite,

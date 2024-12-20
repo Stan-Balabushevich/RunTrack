@@ -32,8 +32,8 @@ import id.slava.nt.auth.presentation.R
 import id.slava.nt.core.presentation.designsystem.CheckIcon
 import id.slava.nt.core.presentation.designsystem.CrossIcon
 import id.slava.nt.core.presentation.designsystem.EmailIcon
+import id.slava.nt.core.presentation.designsystem.PlrunBlue
 import id.slava.nt.core.presentation.designsystem.PlrunDarkRed
-import id.slava.nt.core.presentation.designsystem.PlrunGreen
 import id.slava.nt.core.presentation.designsystem.PlrunTheme
 import id.slava.nt.core.presentation.designsystem.Poppins
 import id.slava.nt.core.presentation.designsystem.components.GradientBackground
@@ -205,7 +205,7 @@ fun PasswordRequirement(
                 CrossIcon
             },
             contentDescription = null,
-            tint = if(isValid) PlrunGreen else PlrunDarkRed
+            tint = if(isValid) PlrunBlue else PlrunDarkRed
         )
         Spacer(modifier = Modifier.width(16.dp))
         Text(
