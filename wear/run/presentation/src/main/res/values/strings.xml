@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="connect_your_phone">This app requires the Plrun phone app to be installed and connected.</string>
+    <string name="connect_your_phone">This app requires the RunTracker phone app to be installed and connected.</string>
     <string name="heart_rate">Heart rate</string>
     <string name="unsupported">Unsupported</string>
     <string name="distance">Distance</string>

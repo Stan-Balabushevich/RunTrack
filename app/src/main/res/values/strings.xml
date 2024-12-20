@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">plrun</string>
+    <string name="app_name">RunTracker</string>
     <string name="title_analitycs_feature">Analitycs</string>
     <string name="error_couldnt_load_module">Couldn\'t load module</string>
     <string name="error_installation_failed">Unfortunately, the installation failed. Please try again later.</string>

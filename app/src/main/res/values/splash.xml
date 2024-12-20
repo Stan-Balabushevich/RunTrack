@@ -2,7 +2,7 @@
 <resources>
     <style name="Theme.App.Starting" parent="Theme.SplashScreen">
         <item name="windowSplashScreenBackground">#222222</item>
-        <item name="windowSplashScreenAnimatedIcon">@drawable/logo_scaled_down</item>
+        <item name="windowSplashScreenAnimatedIcon">@drawable/newlogo_scaled_down</item>
         <item name="postSplashScreenTheme">@style/Theme.Plrun</item>
     </style>
 </resources>
