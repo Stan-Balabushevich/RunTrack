@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.plrun.android.library)
     alias(libs.plugins.plrun.jvm.ktor)
+    alias(libs.plugins.google.services)
 }
 
 android {
@@ -14,4 +15,6 @@ dependencies {
     implementation(projects.core.data)
     //Koin
     implementation(libs.bundles.koin)
+    implementation(platform(libs.firebase.bom))
+    implementation(libs.firebase.auth)
 }

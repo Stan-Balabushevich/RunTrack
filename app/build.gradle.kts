@@ -3,6 +3,7 @@ plugins {
     alias(libs.plugins.plrun.android.junit5)
     alias(libs.plugins.plrun.jvm.ktor)
     alias(libs.plugins.mapsplatform.secrets.plugin)
+    alias(libs.plugins.google.services)
 }
 
 android {
@@ -62,6 +63,10 @@ dependencies {
 
     // Timber
     implementation(libs.timber)
+
+    //firebase
+    implementation(platform(libs.firebase.bom))
+    implementation(libs.firebase.auth)
 
     // all app modules
     implementation(projects.core.presentation.designsystem)

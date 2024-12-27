@@ -59,6 +59,9 @@ turbine = "1.1.0"
 composeUiTestManifest = "1.7.6"
 coroutines-test = "1.8.1"
 
+googleServices = "4.4.2"
+firebaseBom = "33.7.0"
+
 
 
 # Project versions
@@ -133,6 +136,8 @@ org-mongodb-bson = { module = "org.mongodb:bson", version.ref = "bson" }
 play-services-maps = { group = "com.google.android.gms", name = "play-services-maps", version.ref = "playServicesMaps" }
 google-maps-android-utils-ktx = { module = "com.google.maps.android:maps-utils-ktx", version.ref = "mapsUtils"}
 annotation = { group = "androidx.annotation", name = "annotation", version.ref = "annotation" }
+firebase-bom = { module = "com.google.firebase:firebase-bom" , version.ref = "firebaseBom" }
+firebase-auth = { module = "com.google.firebase:firebase-auth", version = "" }
 
 # Test dependencies
 junit5-api = { module = "org.junit.jupiter:junit-jupiter-api", version.ref = "junit5" }
@@ -178,6 +183,8 @@ room = { id = "androidx.room", version.ref = "room" }
 androidDynamicFeature = { id = "com.android.dynamic-feature", version.ref = "agp" }
 mapsplatform-secrets-plugin = { id = "com.google.android.libraries.mapsplatform.secrets-gradle-plugin", version.ref = "secretsPlugin"}
 
+google-services = { id = "com.google.gms.google-services", version.ref = "googleServices"}
+
 junit5 = { id = "de.mannodermaus.android-junit5", version.ref = "junit5-plugin" }
 
 
@@ -218,4 +225,9 @@ ktor = [
     "ktor-client-core",
     "ktor-client-logging",
     "ktor-serialization-kotlinx-json"
+]
+firebase = [
+
+
+
 ]
