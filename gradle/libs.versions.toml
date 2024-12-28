@@ -138,6 +138,8 @@ google-maps-android-utils-ktx = { module = "com.google.maps.android:maps-utils-k
 annotation = { group = "androidx.annotation", name = "annotation", version.ref = "annotation" }
 firebase-bom = { module = "com.google.firebase:firebase-bom" , version.ref = "firebaseBom" }
 firebase-auth = { module = "com.google.firebase:firebase-auth", version = "" }
+firebase-firestore = { module = "com.google.firebase:firebase-firestore-ktx", version = ""}
+firebase-storage = {module = "com.google.firebase:firebase-storage", version = ""}
 
 # Test dependencies
 junit5-api = { module = "org.junit.jupiter:junit-jupiter-api", version.ref = "junit5" }
