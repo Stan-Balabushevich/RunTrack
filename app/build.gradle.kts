@@ -64,10 +64,6 @@ dependencies {
     // Timber
     implementation(libs.timber)
 
-    //firebase
-    implementation(platform(libs.firebase.bom))
-    implementation(libs.firebase.auth)
-
     // all app modules
     implementation(projects.core.presentation.designsystem)
     implementation(projects.core.presentation.ui)

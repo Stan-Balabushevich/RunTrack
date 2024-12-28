@@ -2,10 +2,7 @@ package id.slava.nt.plrun
 
 import android.app.Application
 import android.content.Context
-import android.util.Log
 import com.google.android.play.core.splitcompat.SplitCompat
-import com.google.firebase.FirebaseApp
-
 import id.slava.nt.auth.data.di.authDataModule
 import id.slava.nt.auth.presentation.di.authViewModelModule
 import id.slava.nt.core.connectivity.data.di.coreConnectivityDataModule
@@ -28,16 +25,8 @@ class PlrunApp: Application() {
 
     val applicationScope = CoroutineScope(SupervisorJob())
 
-
-
     override fun onCreate() {
         super.onCreate()
-
-        // Initialize Firebase
-        FirebaseApp.initializeApp(this)
-        if (FirebaseApp.getInstance() != null) {
-            Log.d("PlrunApp", "Firebase initialized successfully")
-        }
 
         if (BuildConfig.DEBUG) {
             Timber.plant(Timber.DebugTree())
