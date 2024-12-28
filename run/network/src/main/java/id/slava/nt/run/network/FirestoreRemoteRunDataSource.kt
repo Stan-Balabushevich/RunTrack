@@ -69,12 +69,19 @@ class FirestoreRemoteRunDataSource(
     }
 
 
-    override suspend fun deleteRun(id: String): EmptyResult<DataError.Network> {
+    override suspend fun deleteRun(runId: String): EmptyResult<DataError.Network> {
         return try {
-            runsCollection.document(id).delete().await()
-            Result.Success(Unit)
+            val userId = firebaseAuth.currentUser?.uid
+                ?: return Result.Error(DataError.Network.UNAUTHORIZED) // Handle case where user is not authenticated
+
+            // Delete the run from the user's subcollection
+            val userRunsCollection = firestore.collection("users").document(userId).collection("runs")
+            userRunsCollection.document(runId).delete().await()
+
+            Result.Success(Unit) // Successfully deleted the run
         } catch (e: Exception) {
-            Result.Error(e.toDataError())
+            Result.Error(e.toDataError()) // Handle errors and convert them to DataError
         }
     }
+
 }
