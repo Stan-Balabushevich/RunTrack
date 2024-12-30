@@ -53,9 +53,6 @@ class OfflineFirstRunRepository(
     override suspend fun upsertRun(run: Run, mapPicture: ByteArray): EmptyResult<DataError> {
         val localResult = localRunDataSource.upsertRun(run)
 
-       // TODO Need to be fixed.  if database return error there is some issue in ui
-         //return Result.Error(DataError.Local.DISK_FULL).asEmptyDataResult()
-
         if(localResult !is Result.Success) {
             return localResult.asEmptyDataResult()
         }
