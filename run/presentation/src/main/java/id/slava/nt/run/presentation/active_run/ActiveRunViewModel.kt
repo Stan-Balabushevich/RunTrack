@@ -213,7 +213,7 @@ class ActiveRunViewModel(
                 when(val result = runRepository.upsertRun(run, mapPictureBytes)) {
                     is Result.Error -> {
                         eventChannel.send(ActiveRunEvent.Error(result.error.asUiText()))
-                        // temporary solution for error disk full
+                        // TODO temporary solution for error disk full
                         eventChannel.send(ActiveRunEvent.RunFinished)
                     }
                     is Result.Success -> {

@@ -16,15 +16,17 @@ class FirestoreRemoteRunDataSource(
     private val firebaseAuth: FirebaseAuth
 ) : RemoteRunDataSource {
 
-    private val runsCollection = firestore.collection("runs")
-    private  val storageRef = firebaseStorage.reference
+    private fun getUserId(): String? {
+        return firebaseAuth.currentUser?.uid
+    }
 
     override suspend fun getRuns(): Result<List<Run>, DataError.Network> {
         return try {
-            val userId = firebaseAuth.currentUser?.uid ?: return Result.Error(DataError.Network.UNAUTHORIZED)
+            val userId = getUserId() ?: return Result.Error(DataError.Network.UNAUTHORIZED)
 
-            val snapshot = runsCollection
-                .whereEqualTo("userId", userId) // Filter runs by userId
+            val snapshot = firestore.collection("users")
+                .document(userId)
+                .collection("runs")
                 .get()
                 .await()
 
@@ -35,53 +37,43 @@ class FirestoreRemoteRunDataSource(
         }
     }
 
-
-
     override suspend fun postRun(run: Run, mapPicture: ByteArray): Result<Run, DataError.Network> {
         return try {
-            val userId = firebaseAuth.currentUser?.uid
-                ?: return Result.Error(DataError.Network.UNAUTHORIZED) // Handle case where user is not authenticated
+            val userId = getUserId() ?: return Result.Error(DataError.Network.UNAUTHORIZED)
+            val runId = run.id ?: return Result.Error(DataError.Network.UNAUTHORIZED)
 
-            val runId = runsCollection.document().id
+            val userRunsCollection = firestore.collection("users").document(userId).collection("runs")
+//            val runId = userRunsCollection.document().id
 
-            // Reference for map picture with the new structure
-            val mapPictureRef = storageRef.child("users/$userId/runs/$runId/map_pictures/$runId.jpg")
-
-            // Upload the picture to Firebase Storage
+            val mapPictureRef = firebaseStorage.reference.child("users/$userId/runs/${runId}/map_pictures/$runId.jpg")
             mapPictureRef.putBytes(mapPicture).await()
-
-            // Get the download URL for the uploaded picture
             val mapPictureUrl = mapPictureRef.downloadUrl.await().toString()
 
-            // Update the Run object with the mapPictureUrl
             val updatedRun = run.copy(mapPictureUrl = mapPictureUrl)
-
-            // Save the run data in Firestore, under the user's runs subcollection
-            val userRunsCollection = firestore.collection("users").document(userId).collection("runs")
             val runMap = updatedRun.toFirestoreMap()
 
             userRunsCollection.document(runId).set(runMap).await()
 
-            Result.Success(updatedRun) // Return updated run with the URL
+            Result.Success(updatedRun)
         } catch (e: Exception) {
             Result.Error(e.toDataError())
         }
     }
 
-
     override suspend fun deleteRun(id: String): EmptyResult<DataError.Network> {
         return try {
-            val userId = firebaseAuth.currentUser?.uid
-                ?: return Result.Error(DataError.Network.UNAUTHORIZED) // Handle case where user is not authenticated
+            val userId = getUserId() ?: return Result.Error(DataError.Network.UNAUTHORIZED)
 
-            // Delete the run from the user's subcollection
             val userRunsCollection = firestore.collection("users").document(userId).collection("runs")
             userRunsCollection.document(id).delete().await()
 
-            Result.Success(Unit) // Successfully deleted the run
+            // Clean up associated map picture in storage
+            val mapPictureRef = firebaseStorage.reference.child("users/$userId/runs/$id/map_pictures/$id.jpg")
+            mapPictureRef.delete().await()
+
+            Result.Success(Unit)
         } catch (e: Exception) {
-            Result.Error(e.toDataError()) // Handle errors and convert them to DataError
+            Result.Error(e.toDataError())
         }
     }
-
 }

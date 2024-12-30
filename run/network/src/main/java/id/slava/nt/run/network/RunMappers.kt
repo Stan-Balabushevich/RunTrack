@@ -57,7 +57,7 @@ fun Run.toFirestoreMap(): Map<String, Any?> {
 
 fun Map<String, Any>.toRun(): Run {
     return Run(
-        id = this["id"] as String?,
+        id = this["id"] as String,
         duration = (this["durationMillis"] as Long).milliseconds,
         dateTimeUtc = Instant.ofEpochMilli((this["epochMillis"] as Long))
             .atZone(ZoneId.of("UTC")),

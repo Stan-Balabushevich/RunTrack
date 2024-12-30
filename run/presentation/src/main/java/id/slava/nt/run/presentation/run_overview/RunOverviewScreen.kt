@@ -1,4 +1,4 @@
-@file:OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
+@file:OptIn(ExperimentalMaterial3Api::class)
 
 package id.slava.nt.run.presentation.run_overview
 
@@ -122,8 +122,7 @@ private fun RunOverviewScreen(
                     onDeleteClick = {
                         onAction(RunOverviewAction.DeleteRun(it))
                     },
-                    modifier = Modifier
-                        .animateItemPlacement()
+                    modifier = Modifier.animateItem(fadeInSpec = null, fadeOutSpec = null)
                 )
             }
         }
