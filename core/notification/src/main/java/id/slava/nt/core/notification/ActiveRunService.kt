@@ -34,7 +34,7 @@ class ActiveRunService: Service() {
 
     private val baseNotification by lazy {
         NotificationCompat.Builder(applicationContext, CHANNEL_ID)
-            .setSmallIcon(id.slava.nt.core.presentation.designsystem.R.drawable.logo)
+            .setSmallIcon(id.slava.nt.core.presentation.designsystem.R.drawable.newlogo)
 //            .setOnlyAlertOnce(true)
             .setContentTitle(getString(R.string.active_run))
     }
