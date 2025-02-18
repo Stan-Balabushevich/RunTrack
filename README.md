@@ -104,7 +104,8 @@ Centralized build logic:
    git clone https://github.com/Stan-Balabushevich/RunTrack.git
    ```
 2. Open the project in Android Studio.
-3. Build the project and install the app on your device.
+3. In local.properties file create MAPS_API_KEY=GoogleMapsApiKey - change for your api key 
+4. Build the project and install the app on your device.
 
 ### Dynamic Feature Installation
 The Analytics module can be installed from within the app as needed.
